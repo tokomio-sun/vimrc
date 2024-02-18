@@ -4,10 +4,23 @@ set encoding=utf-8
 set fenc=utf-8
 set fileencodings=utf-8,sjis,iso-2022-jp,euc-jp
 set fileformats=unix,dos,mac
+
+"改行コードの指定
+"set fileformat=unix
+"set fileformat=dos
+
+
 " バックアップファイルを作らない
 set nobackup
+" バックアップファイルの出力先
+"set backupdir=.
+
 " スワップファイルを作らない
 set noswapfile
+" スワップファイルの出力先
+"set directory=.
+
+
 " 編集中のファイルが変更されたら自動で読み直す
 set autoread
 " バッファが編集中でもその他のファイルを開けるように
@@ -52,14 +65,17 @@ syntax on
 set list
 set listchars=tab:>-,trail:-,eol:$,extends:≫,precedes:≪,nbsp:%
 
-" Tab文字を半角スペースにする
-"set expandtab
-" 行頭以外のTab文字の表示幅（スペースいくつ分）
+
+" TAB文字を見た目上何文字で表示するか
 set tabstop=4
-" 行頭でのTab文字の表示幅
+
+" 自動インデントでのインデントの長さ
 set shiftwidth=4
-" オートインデント
-set autoindent
+
+" TABキー押下時に挿入するスペースの数
+" ('tabstop'に合わせる)
+set softtabstop=0
+
 
 " 
 " カーソル系
@@ -102,16 +118,66 @@ set statusline+=[%{(&fenc!=''?&fenc:$enc).':'.&ff}]
 
 hi Comment ctermfg=DarkGreen
 
-set guifont=Noto\ Mono\ Regular\ 10
-set guifontwide=\Noto\ Mono\ Regular\ 10
+"set guifont=Noto\ Mono\ Regular\ 10
+"set guifontwide=\Noto\ Mono\ Regular\ 10
 
+filetype on
+
+
+" ファイル拡張子別 キーボードショートカット
+"[other] -----------------------------------------
+"[ビジュアルモード]
+" 引用化
+autocmd FileType * vmap <C-k> :s/\v^(.+)$/> \1/<Enter>::nohlsearch<Enter>
+
+" 引用外し
+autocmd FileType * vmap <C-l> :s/\v^> (.+)$/\1/g<Enter>::nohlsearch<Enter>
+
+
+
+"[C/C++] -----------------------------------------
+autocmd FileType c,cpp setlocal cindent shiftwidth=4 tabstop=4 softtabstop=0
+
+"[ノーマルモード]
+
+"ソースファイル全体を整形する with clang-format
 autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
 
-" C/CPP コメント化
+
+"[ビジュアルモード]
+"選択した行を整形する with clang-format
+autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
+
+" コメント化
 autocmd FileType c,cpp vmap <C-k> :s/\v^(.+)$/\/\/ \1/<Enter>::nohlsearch<Enter>
 
-" C/CPP アンコメント化
+" アンコメント化
 autocmd FileType c,cpp vmap <C-l> :s/\v^\/\/ (.+)$/\1/g<Enter>::nohlsearch<Enter>
 
+"-----------------------------------------
+
+"[Python] -----------------------------------------
+autocmd FileType python setlocal autoindent shiftwidth=4 tabstop=4 softtabstop=0
+
+"TAB文字をスペースにする
+autocmd FileType python setlocal expandtab
+
+
+"[ノーマルモード]
+"ソースファイル全体を整形する with black (pip install black)
+autocmd FileType python noremap <C-f> :%!black -q -<Enter>
+
+
+"[ビジュアルモード]
+"選択した行を整形する
+autocmd FileType python vmap <C-f> :%!black -q -<Enter>
+
+" コメント化
+autocmd FileType python vmap <C-k> :s/\v^(.+)$/# \1/<Enter>::nohlsearch<Enter>
+
+" アンコメント化
+autocmd FileType python vmap <C-l> :s/\v^\# (.+)$/\1/g<Enter>::nohlsearch<Enter>
+
+"-----------------------------------------
 
 
