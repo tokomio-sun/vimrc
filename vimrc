@@ -1,13 +1,9 @@
 " setting
 "文字コードをUFT-8に設定
 set encoding=utf-8
-set fenc=utf-8
-set fileencodings=utf-8,sjis,iso-2022-jp,euc-jp
+set fileencoding=utf-8
+set fileencodings=utf-8,sjis,utf-16le,iso-2022-jp,euc-jp
 set fileformats=unix,dos,mac
-
-"改行コードの指定
-"set fileformat=unix
-"set fileformat=dos
 
 
 " バックアップファイルを作らない
@@ -128,10 +124,10 @@ filetype on
 "[other] -----------------------------------------
 "[ビジュアルモード]
 " 引用化
-autocmd FileType * vmap <C-k> :s/\v^(.+)$/> \1/<Enter>::nohlsearch<Enter>
+autocmd FileType * vmap <S-k> :s/\v^(.+)$/> \1/<Enter>::nohlsearch<Enter>
 
 " 引用外し
-autocmd FileType * vmap <C-l> :s/\v^> (.+)$/\1/g<Enter>::nohlsearch<Enter>
+autocmd FileType * vmap <S-l> :s/\v^\> (.+)$/\1/g<Enter>::nohlsearch<Enter>
 
 
 
@@ -149,10 +145,10 @@ autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
 autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
 
 " コメント化
-autocmd FileType c,cpp vmap <C-k> :s/\v^(.+)$/\/\/ \1/<Enter>::nohlsearch<Enter>
+autocmd FileType c,cpp vmap <S-k> :s/\v^(.+)$/\/\/ \1/<Enter>::nohlsearch<Enter>
 
 " アンコメント化
-autocmd FileType c,cpp vmap <C-l> :s/\v^\/\/ (.+)$/\1/g<Enter>::nohlsearch<Enter>
+autocmd FileType c,cpp vmap <S-l> :s/\v^\/\/ (.+)$/\1/g<Enter>::nohlsearch<Enter>
 
 "-----------------------------------------
 
@@ -170,13 +166,13 @@ autocmd FileType python noremap <C-f> :%!black -q -<Enter>
 
 "[ビジュアルモード]
 "選択した行を整形する
-autocmd FileType python vmap <C-f> :%!black -q -<Enter>
+autocmd FileType python vmap <S-f> :%!black -q -<Enter>
 
 " コメント化
-autocmd FileType python vmap <C-k> :s/\v^(.+)$/# \1/<Enter>::nohlsearch<Enter>
+autocmd FileType python vmap <S-k> :s/\v^(.+)$/# \1/<Enter>::nohlsearch<Enter>
 
 " アンコメント化
-autocmd FileType python vmap <C-l> :s/\v^\# (.+)$/\1/g<Enter>::nohlsearch<Enter>
+autocmd FileType python vmap <S-l> :s/\v^\# (.+)$/\1/g<Enter>::nohlsearch<Enter>
 
 "-----------------------------------------
 
