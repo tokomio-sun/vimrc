@@ -64,7 +64,6 @@ endif
 "シンタックスハイライトをオン
 syntax on
 
-
 " Tab系
 " 不可視文字を可視化(タブが「?-」と表示される)
 set list
@@ -139,6 +138,9 @@ autocmd FileType * vmap <S-l> :s/\v^\> (.+)$/\1/g<Enter>::nohlsearch<Enter>
 "[C/C++] -----------------------------------------
 autocmd FileType c,cpp setlocal cindent shiftwidth=4 tabstop=4 softtabstop=0
 
+"保存時、行末スペースを削除する
+autocmd BufWritePre *.c,*.cpp,*.h :%s/\s\+$//ge
+
 "[ノーマルモード]
 
 "ソースファイル全体を整形する with clang-format
@@ -158,10 +160,15 @@ autocmd FileType c,cpp vmap <S-l> :s/\v^\/\/ (.+)$/\1/g<Enter>::nohlsearch<Enter
 "-----------------------------------------
 
 "[Python] -----------------------------------------
-autocmd FileType python setlocal autoindent shiftwidth=4 tabstop=4 softtabstop=0
+autocmd FileType python setlocal autoindent
+autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class
+autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=0
 
 "TAB文字をスペースにする
 autocmd FileType python setlocal expandtab
+
+"保存時、行末スペースを削除する
+autocmd BufWritePre *.py :%s/\s\+$//ge
 
 
 "[ノーマルモード]
