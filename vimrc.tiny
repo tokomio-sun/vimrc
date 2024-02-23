@@ -51,6 +51,12 @@ if has("multi_byte")
     set ambiwidth=double
 endif
 
+"IME状態に応じたカーソル色を設定
+if has("multi_byte_ime") || has("xim")
+    highlight Cursor guifg=#000d18 guibg=#8faf9f gui=bold
+    highlight CursorIM guifg=NONE guibg=#ecbcbc
+endif
+
 " 折り返し時に表示行単位での移動できるようにする
 "nnoremap j gj
 "nnoremap k gk
@@ -62,6 +68,7 @@ endif
 " 不可視文字を可視化(タブが「?-」と表示される)
 set list
 set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%
+
 
 " TAB文字を見た目上何文字で表示するか
 set tabstop=4
@@ -115,10 +122,9 @@ set pastetoggle=<F2>
 
 "hi Comment ctermfg=DarkGreen
 
-"filetype on
-
-
 " ファイル拡張子別 キーボードショートカット
+filetype on
+
 "[other] -----------------------------------------
 "[ビジュアルモード]
 " 引用化
@@ -130,6 +136,9 @@ autocmd FileType * vmap <S-l> :s/\v^\> (.+)$/\1/g<Enter>::nohlsearch<Enter>
 
 "[C/C++] -----------------------------------------
 autocmd FileType c,cpp setlocal cindent shiftwidth=4 tabstop=4 softtabstop=0
+
+"保存時、行末スペースを削除する
+autocmd BufWritePre *.c,*.cpp,*.h :%s/\s\+$//ge
 
 "[ノーマルモード]
 
@@ -145,15 +154,20 @@ autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
 autocmd FileType c,cpp vmap <S-k> :s/\v^(.+)$/\/\/ \1/<Enter>::nohlsearch<Enter>
 
 " アンコメント化
-"autocmd FileType c,cpp vmap <S-l> :s/\v^\/\/ (.+)$/\1/g<Enter>::nohlsearch<Enter>
+autocmd FileType c,cpp vmap <S-l> :s/\v^\/\/ (.+)$/\1/g<Enter>::nohlsearch<Enter>
 
 "-----------------------------------------
 
 "[Python] -----------------------------------------
-autocmd FileType python setlocal autoindent shiftwidth=4 tabstop=4 softtabstop=0
+autocmd FileType python setlocal autoindent
+autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class
+autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=0
 
 "TAB文字をスペースにする
 autocmd FileType python setlocal expandtab
+
+"保存時、行末スペースを削除する
+autocmd BufWritePre *.py :%s/\s\+$//ge
 
 
 "[ノーマルモード]
@@ -172,5 +186,4 @@ autocmd FileType python setlocal expandtab
 "autocmd FileType python vmap <S-l> :s/\v^\# (.+)$/\1/g<Enter>::nohlsearch<Enter>
 
 "-----------------------------------------
-
 

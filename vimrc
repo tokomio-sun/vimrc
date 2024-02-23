@@ -1,5 +1,4 @@
 " setting
-"文字コードをUFT-8に設定
 set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8,sjis,utf-16le,iso-2022-jp,euc-jp
@@ -52,7 +51,7 @@ if has("multi_byte")
 endif
 
 "IME状態に応じたカーソル色を設定
-if has("multi_byte_ime")
+if has("multi_byte_ime") || has("xim")
     highlight Cursor guifg=#000d18 guibg=#8faf9f gui=bold
     highlight CursorIM guifg=NONE guibg=#ecbcbc
 endif
@@ -132,7 +131,6 @@ autocmd FileType * vmap <S-k> :s/\v^(.+)$/> \1/<Enter>::nohlsearch<Enter>
 
 " 引用外し
 autocmd FileType * vmap <S-l> :s/\v^\> (.+)$/\1/g<Enter>::nohlsearch<Enter>
-
 
 
 "[C/C++] -----------------------------------------
