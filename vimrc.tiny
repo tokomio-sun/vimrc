@@ -46,6 +46,11 @@ set laststatus=2
 " コマンドラインの補完
 set wildmode=list:longest
 
+" 全角幅で表示する
+if has("multi_byte")
+    set ambiwidth=double
+endif
+
 " 折り返し時に表示行単位での移動できるようにする
 "nnoremap j gj
 "nnoremap k gk
@@ -53,12 +58,10 @@ set wildmode=list:longest
 "シンタックスハイライトをオン
 "syntax on
 
-
 " Tab系
 " 不可視文字を可視化(タブが「?-」と表示される)
 set list
-set listchars=tab:>-,trail:-,eol:$,extends:≫,precedes:≪,nbsp:%
-
+set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%
 
 " TAB文字を見た目上何文字で表示するか
 set tabstop=4
@@ -110,10 +113,7 @@ set pastetoggle=<F2>
 "set statusline+=[%c]
 "set statusline+=[%{(&fenc!=''?&fenc:$enc).':'.&ff}]
 
-hi Comment ctermfg=DarkGreen
-
-"set guifont=Noto\ Mono\ Regular\ 10
-"set guifontwide=\Noto\ Mono\ Regular\ 10
+"hi Comment ctermfg=DarkGreen
 
 "filetype on
 
@@ -122,28 +122,27 @@ hi Comment ctermfg=DarkGreen
 "[other] -----------------------------------------
 "[ビジュアルモード]
 " 引用化
-"autocmd FileType * vmap <S-k> :s/\v^(.+)$/> \1/<Enter>::nohlsearch<Enter>
+autocmd FileType * vmap <S-k> :s/\v^(.+)$/> \1/<Enter>::nohlsearch<Enter>
 
 " 引用外し
-"autocmd FileType * vmap <S-l> :s/\v^\> (.+)$/\1/g<Enter>::nohlsearch<Enter>
-
+autocmd FileType * vmap <S-l> :s/\v^\> (.+)$/\1/g<Enter>::nohlsearch<Enter>
 
 
 "[C/C++] -----------------------------------------
-"autocmd FileType c,cpp setlocal autoindent shiftwidth=4 tabstop=4 softtabstop=0
+autocmd FileType c,cpp setlocal cindent shiftwidth=4 tabstop=4 softtabstop=0
 
 "[ノーマルモード]
 
 "ソースファイル全体を整形する with clang-format
-"autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
+autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
 
 
 "[ビジュアルモード]
 "選択した行を整形する with clang-format
-"autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
+autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
 
 " コメント化
-"autocmd FileType c,cpp vmap <S-k> :s/\v^(.+)$/\/\/ \1/<Enter>::nohlsearch<Enter>
+autocmd FileType c,cpp vmap <S-k> :s/\v^(.+)$/\/\/ \1/<Enter>::nohlsearch<Enter>
 
 " アンコメント化
 "autocmd FileType c,cpp vmap <S-l> :s/\v^\/\/ (.+)$/\1/g<Enter>::nohlsearch<Enter>
@@ -151,10 +150,10 @@ hi Comment ctermfg=DarkGreen
 "-----------------------------------------
 
 "[Python] -----------------------------------------
-"autocmd FileType python setlocal autoindent shiftwidth=4 tabstop=4 softtabstop=0
+autocmd FileType python setlocal autoindent shiftwidth=4 tabstop=4 softtabstop=0
 
 "TAB文字をスペースにする
-"autocmd FileType python setlocal expandtab
+autocmd FileType python setlocal expandtab
 
 
 "[ノーマルモード]

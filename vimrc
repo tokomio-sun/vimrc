@@ -57,8 +57,6 @@ if has("multi_byte_ime")
     highlight CursorIM guifg=NONE guibg=#ecbcbc
 endif
 
-
-
 " 折り返し時に表示行単位での移動できるようにする
 "nnoremap j gj
 "nnoremap k gk
@@ -125,13 +123,9 @@ set statusline+=[%{(&fenc!=''?&fenc:$enc).':'.&ff}]
 
 hi Comment ctermfg=DarkGreen
 
-"set guifont=Noto\ Mono\ Regular\ 10
-"set guifontwide=\Noto\ Mono\ Regular\ 10
-
+" ファイル拡張子別 キーボードショートカット
 filetype on
 
-
-" ファイル拡張子別 キーボードショートカット
 "[other] -----------------------------------------
 "[ビジュアルモード]
 " 引用化
@@ -186,5 +180,4 @@ autocmd FileType python vmap <S-k> :s/\v^(.+)$/# \1/<Enter>::nohlsearch<Enter>
 autocmd FileType python vmap <S-l> :s/\v^\# (.+)$/\1/g<Enter>::nohlsearch<Enter>
 
 "-----------------------------------------
-
 
