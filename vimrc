@@ -46,6 +46,19 @@ set laststatus=2
 " コマンドラインの補完
 set wildmode=list:longest
 
+" 全角幅で表示する
+if has("multi_byte")
+    set ambiwidth=double
+endif
+
+"IME状態に応じたカーソル色を設定
+if has("multi_byte_ime")
+    highlight Cursor guifg=#000d18 guibg=#8faf9f gui=bold
+    highlight CursorIM guifg=NONE guibg=#ecbcbc
+endif
+
+
+
 " 折り返し時に表示行単位での移動できるようにする
 "nnoremap j gj
 "nnoremap k gk
@@ -57,7 +70,7 @@ syntax on
 " Tab系
 " 不可視文字を可視化(タブが「?-」と表示される)
 set list
-set listchars=tab:>-,trail:-,eol:$,extends:≫,precedes:≪,nbsp:%
+set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%
 
 
 " TAB文字を見た目上何文字で表示するか
