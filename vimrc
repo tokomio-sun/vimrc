@@ -133,6 +133,12 @@ autocmd FileType c,cpp setlocal cindent shiftwidth=4 tabstop=4 softtabstop=0
 "保存時、行末スペースを削除する
 autocmd BufWritePre *.c,*.cpp,*.h :%s/\s\+$//ge
 
+" termdebugプラグインを読み込む
+autocmd FileType c,cpp packadd termdebug
+autocmd FileType c,cpp setlocal mouse=a
+
+
+
 "[ノーマルモード]
 
 "ソースファイル全体を整形する with clang-format
@@ -152,7 +158,7 @@ autocmd FileType c,cpp vmap <S-l> :s/\v^\/\/ (.+)$/\1/g<Enter>::nohlsearch<Enter
 "-----------------------------------------
 
 "[Python] -----------------------------------------
-autocmd FileType python setlocal autoindent
+autocmd FileType python setlocal smartindent
 autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class
 autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=0
 
