@@ -15,3 +15,11 @@ if has("multi_byte")
     set ambiwidth=double
 endif
 
+
+"IME状態に応じたカーソル色を設定
+if has("multi_byte_ime") || has("xim")
+    highlight Cursor guifg=#000d18 guibg=#8faf9f gui=bold
+    highlight CursorIM guifg=NONE guibg=#ecbcbc
+endif
+
+
