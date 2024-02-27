@@ -15,6 +15,9 @@ set noswapfile
 " スワップファイルの出力先
 "set directory=.
 
+" カレントディレクトリを開いているファイルのディレクトリに移動させる
+set autochdir
+
 
 " 編集中のファイルが変更されたら自動で読み直す
 set autoread
@@ -160,7 +163,7 @@ autocmd FileType c,cpp vmap <S-l> :s/\v^\/\/ (.+)$/\1/g<Enter>::nohlsearch<Enter
 "[Python] -----------------------------------------
 autocmd FileType python setlocal smartindent
 autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class
-autocmd FileType python setlocal shiftwidth=4 tabstop=4 softtabstop=0
+autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=0
 
 "TAB文字をスペースにする
 autocmd FileType python setlocal expandtab
@@ -185,4 +188,14 @@ autocmd FileType python vmap <S-k> :s/\v^(.+)$/# \1/<Enter>::nohlsearch<Enter>
 autocmd FileType python vmap <S-l> :s/\v^\# (.+)$/\1/g<Enter>::nohlsearch<Enter>
 
 "-----------------------------------------
+
+"[YAML] -----------------------------------------
+autocmd FileType yaml setlocal autoindent
+autocmd FileType yaml setlocal tabstop=4 shiftwidth=4 softtabstop=0
+
+"TAB文字をスペースにする
+autocmd FileType yaml setlocal expandtab
+
+"保存時、行末スペースを削除する
+autocmd BufWritePre *.yaml :%s/\s\+$//ge
 
