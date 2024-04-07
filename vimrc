@@ -1,7 +1,6 @@
 " setting
 set encoding=utf-8
-set fileencoding=utf-8
-set fileencodings=utf-8,sjis,utf-16le,iso-2022-jp,euc-jp
+set fileencodings=ucs-bom,utf-8,utf-16le,cp932,sjis,euc-jp,iso-2022-jp
 set fileformats=unix,dos,mac
 
 
@@ -32,6 +31,9 @@ set showcmd
 set number
 " カーソルの位置情報を表示
 set ruler
+" 括弧入力時の対応する括弧を表示
+set showmatch
+set matchtime=1
 
 " 現在の行を強調表示
 set cursorline
@@ -41,8 +43,6 @@ set cursorline
 set virtualedit=onemore
 " ビープ音を可視化
 set visualbell
-" 括弧入力時の対応する括弧を表示
-set showmatch
 " ステータスラインを常に表示
 set laststatus=2
 " コマンドラインの補完
@@ -57,8 +57,9 @@ endif
 "nnoremap j gj
 "nnoremap k gk
 
-"シンタックスハイライトをオン
-syntax on
+" 折り返ししない
+set nowrap
+
 
 " Tab系
 " 不可視文字を可視化(タブが「?-」と表示される)
@@ -116,18 +117,32 @@ set statusline+=[%l/%L]
 set statusline+=[%c]
 set statusline+=[%{(&fenc!=''?&fenc:$enc).':'.&ff}]
 
-hi Comment ctermfg=DarkGreen
+
 
 " ファイル拡張子別 キーボードショートカット
 filetype on
 
 "[other] -----------------------------------------
-"[ビジュアルモード]
-" 引用化
-autocmd FileType * vmap <S-k> :s/\v^(.+)$/> \1/<Enter>::nohlsearch<Enter>
 
-" 引用外し
-autocmd FileType * vmap <S-l> :s/\v^\> (.+)$/\1/g<Enter>::nohlsearch<Enter>
+inoremap { {}<Left>
+inoremap ( ()<Left>
+inoremap [ []<Left>
+
+function! ChangeSyntax() abort
+ if empty(&filetype) || &filetype ==? "text"
+    vmap <S-k> :s/\v^(.+)$/> \1/<Enter>::nohlsearch<Enter>
+    vmap <S-l> :s/\v^\> (.+)$/\1/g<Enter>::nohlsearch<Enter>
+
+    syntax off
+  else
+
+    "シンタックスハイライトをオン
+    syntax on
+    hi Comment ctermfg=DarkGreen
+  endif
+endfunction
+
+autocmd BufNewFile,BufRead * call ChangeSyntax()
 
 
 "[C/C++] -----------------------------------------
