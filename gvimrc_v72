@@ -6,13 +6,16 @@ set columns=120
 set lines=25
 
 if has("gui_win32")
-    set guifont="‚l‚r_ƒSƒVƒbƒN:h10::cSHIFTJIS"
-    set printfont="‚l‚r_ƒSƒVƒbƒN:h22:cSHIFTJIS"
+  set guifont="‚l‚r_ƒSƒVƒbƒN:h10::cSHIFTJIS"
+  set printfont="‚l‚r_ƒSƒVƒbƒN:h22:cSHIFTJIS"
 elseif has("gui_running")
-    set guifont="Noto Mono 10"
+  set guifont="Noto Mono 10"
 endif
 
-if has("multi_byte")
-    set ambiwidth=double
+"IMEó‘Ô‚É‰‚¶‚½ƒJ[ƒ\ƒ‹F‚ğİ’è
+if has("multi_byte_ime") || has("xim")
+    highlight Cursor guifg=#000d18 guibg=#8faf9f gui=bold
+    highlight CursorIM guifg=NONE guibg=#ecbcbc
 endif
+
 

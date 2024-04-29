@@ -1,22 +1,38 @@
-" setting
+" Vim Setting
+
+" vi互換にしない
+set nocompatible
+
+" 文字コード・改行コード設定
 set encoding=utf-8
-set fileencodings=ucs-bom,utf-8,utf-16le,cp932,sjis,euc-jp,iso-2022-jp
-set fileformats=unix,dos,mac
 
+if has ('unix')
+  set fileencodings=ucs-bom,utf-8,cp932,utf-16le,euc-jp,iso-2022-jp
+  set fileformats=unix,dos,mac
+else
+  set fileencodings=ucs-bom,utf-8,cp932,utf-16le,euc-jp,iso-2022-jp
+  set fileformats=dos,unix,mac
+endif
 
-" バックアップファイルを作らない
+" バックアップファイルを作成しない
 set nobackup
 " バックアップファイルの出力先
 "set backupdir=.
 
-" スワップファイルを作らない
-set noswapfile
-" スワップファイルの出力先
-"set directory=.
+"スワップファイルを作成する
+let swapDirectory=$HOME . "/.vim/swap/"
+if !isdirectory(swapDirectory)
+  call mkdir(swapDirectory, "p")
+endif
+
+set swapfile
+let $directory=swapDirectory
+
+"60秒毎に保存
+set updatetime=60000
 
 " カレントディレクトリを開いているファイルのディレクトリに移動させる
 set autochdir
-
 
 " 編集中のファイルが変更されたら自動で読み直す
 set autoread
@@ -30,10 +46,7 @@ set showcmd
 " 行番号を表示
 set number
 " カーソルの位置情報を表示
-set ruler
-" 括弧入力時の対応する括弧を表示
-set showmatch
-set matchtime=1
+"set ruler
 
 " 現在の行を強調表示
 set cursorline
@@ -53,38 +66,19 @@ if has("multi_byte")
     set ambiwidth=double
 endif
 
-" 折り返し時に表示行単位での移動できるようにする
-"nnoremap j gj
-"nnoremap k gk
-
 " 折り返ししない
 set nowrap
-
 
 " Tab系
 " 不可視文字を可視化(タブが「?-」と表示される)
 set list
 set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%
 
-
-" TAB文字を見た目上何文字で表示するか
-set tabstop=4
-
-" 自動インデントでのインデントの長さ
-set shiftwidth=4
-
-" TABキー押下時に挿入するスペースの数
-" (設定'tabstop'に合わせる)
-set softtabstop=0
-
-
-" 
 " カーソル系
 set whichwrap=b,s,[,],<,>
 
 " バックスペースを、空白、行末、行頭でも使えるようにする
 set backspace=indent,eol,start
-
 
 " 検索系
 " 検索文字列が小文字の場合は大文字小文字を区別なく検索する
@@ -117,100 +111,217 @@ set statusline+=[%l/%L]
 set statusline+=[%c]
 set statusline+=[%{(&fenc!=''?&fenc:$enc).':'.&ff}]
 
-
+set background=dark
 
 " ファイル拡張子別 キーボードショートカット
 filetype on
+filetype plugin indent on
 
-"[other] -----------------------------------------
-
-inoremap { {}<Left>
-inoremap ( ()<Left>
-inoremap [ []<Left>
-
-function! ChangeSyntax() abort
- if empty(&filetype) || &filetype ==? "text"
-    vmap <S-k> :s/\v^(.+)$/> \1/<Enter>::nohlsearch<Enter>
-    vmap <S-l> :s/\v^\> (.+)$/\1/g<Enter>::nohlsearch<Enter>
-
-    syntax off
-  else
-
-    "シンタックスハイライトをオン
-    syntax on
-    hi Comment ctermfg=DarkGreen
+" Filetypeが決まらない場合はtextにする"
+function! s:NoneFileTypeSet()
+  if len(&filetype) == 0
+    set filetype=text
+  endif
+  if len(&fileencoding) == 0
+    if has ('unix')
+      set fileencoding=utf-8
+    else
+      set fileencoding=cp932
+    endif
   endif
 endfunction
+autocmd BufEnter * call s:NoneFileTypeSet()
 
-autocmd BufNewFile,BufRead * call ChangeSyntax()
+"[text] -----------------------------------------
+augroup text
+  autocmd!
+  " 引用コメント化
+  autocmd FileType text vmap <S-k> :s/\v^(.*)$/> \1/<Enter>::nohlsearch<Enter>
 
+  " 引用アンコメント化
+  autocmd FileType text vmap <S-l> :s/\v^> (.*)$/\1/g<Enter>::nohlsearch<Enter>
+  autocmd FileType text inoremap { {}<LEFT>
+  autocmd FileType text inoremap [ []<LEFT>
+  autocmd FileType text inoremap ( ()<LEFT>
+  autocmd FileType text inoremap " ""<LEFT>
+  autocmd FileType text inoremap ' ''<LEFT>
+  autocmd FileType text inoremap < <><LEFT>
+
+  " TAB文字を見た目上何文字で表示するか
+  autocmd FileType text setlocal tabstop=4
+
+  " 自動インデントでのインデントの長さ
+  autocmd FileType text setlocal shiftwidth=4
+
+  " TABキー押下時に挿入するスペースの数
+  " (設定'tabstop'に合わせる)
+  autocmd FileType text setlocal softtabstop=0
+augroup END
+
+"[vim] -----------------------------------------
+augroup vimfile
+  autocmd!
+  autocmd FileType vim setlocal smartindent shiftwidth=2 tabstop=2 softtabstop=0
+
+  "保存時、行末スペースを削除する
+  autocmd BufWritePre *.vimrc,*.gvimrc :%s/\s\+$//ge
+
+  " コメント化
+  autocmd FileType vim vmap <S-k> :s/\v^(.*)$/" \1/<Enter>::nohlsearch<Enter>
+
+  " アンコメント化
+  autocmd FileType vim vmap <S-l> :s/\v^" (.*)$/\1/g<Enter>::nohlsearch<Enter>
+  autocmd FileType vim inoremap { {}<LEFT>
+  autocmd FileType vim inoremap [ []<LEFT>
+  autocmd FileType vim inoremap ( ()<LEFT>
+  autocmd FileType vim inoremap " ""<LEFT>
+  autocmd FileType vim inoremap ' ''<LEFT>
+
+  "TAB文字をスペースにする
+  autocmd FileType vim setlocal expandtab
+
+  "構文ハイライトを有効にする
+  autocmd FileType vim syntax on
+
+  " 括弧入力時の対応する括弧を表示
+  set showmatch
+  set matchtime=1
+
+augroup END
+"-----------------------------------------
+"[SQL] -----------------------------------------
+augroup sqlfile
+  autocmd!
+  autocmd FileType sql setlocal smartindent shiftwidth=4 tabstop=4 softtabstop=0
+
+  "保存時、行末スペースを削除する
+  autocmd BufWritePre *.sql :%s/\s\+$//ge
+
+  " コメント化
+  autocmd FileType sql vmap <S-k> :s/\v^(.*)$/-- \1/<Enter>::nohlsearch<Enter>
+
+  " アンコメント化
+  autocmd FileType sql vmap <S-l> :s/\v^-- (.*)$/\1/g<Enter>::nohlsearch<Enter>
+  autocmd FileType sql inoremap { {}<LEFT>
+  autocmd FileType sql inoremap [ []<LEFT>
+  autocmd FileType sql inoremap ( ()<LEFT>
+  autocmd FileType sql inoremap " ""<LEFT>
+  autocmd FileType sql inoremap ' ''<LEFT>
+
+  "構文ハイライトを有効にする
+  autocmd FileType sql syntax on
+
+  " 括弧入力時の対応する括弧を表示
+  set showmatch
+  set matchtime=1
+
+augroup END
+"-----------------------------------------
 
 "[C/C++] -----------------------------------------
-autocmd FileType c,cpp setlocal cindent shiftwidth=4 tabstop=4 softtabstop=0
+augroup cppfile
+  autocmd!
+  autocmd FileType c,cpp setlocal cindent shiftwidth=4 tabstop=4 softtabstop=0
 
-"保存時、行末スペースを削除する
-autocmd BufWritePre *.c,*.cpp,*.h :%s/\s\+$//ge
+  "保存時、行末スペースを削除する
+  autocmd BufWritePre *.c,*.cpp,*.h :%s/\s\+$//ge
 
-" termdebugプラグインを読み込む
-autocmd FileType c,cpp packadd termdebug
-autocmd FileType c,cpp setlocal mouse=a
+  " termdebugプラグインを読み込む
+  autocmd FileType c,cpp packadd termdebug
+  autocmd FileType c,cpp setlocal mouse=a
 
+  "[ノーマルモード]
+  "ソースファイル全体を整形する with clang-format
+  autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
 
+  "[ビジュアルモード]
+  "選択した行を整形する with clang-format
+  autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
 
-"[ノーマルモード]
+  " コメント化
+  autocmd FileType c,cpp vmap <S-k> :s/\v^(.*)$/\/\/ \1/<Enter>::nohlsearch<Enter>
 
-"ソースファイル全体を整形する with clang-format
-autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
+  " アンコメント化
+  autocmd FileType c,cpp vmap <S-l> :s/\v^\/\/ (.*)$/\1/g<Enter>::nohlsearch<Enter>
+  autocmd FileType c,cpp inoremap { {}<LEFT>
+  autocmd FileType c,cpp inoremap [ []<LEFT>
+  autocmd FileType c,cpp inoremap ( ()<LEFT>
+  autocmd FileType c,cpp inoremap " ""<LEFT>
+  autocmd FileType c,cpp inoremap ' ''<LEFT>
 
+  "構文ハイライトを有効にする
+  autocmd FileType c,cpp syntax on
+  " 括弧入力時の対応する括弧を表示
+  set showmatch
+  set matchtime=1
 
-"[ビジュアルモード]
-"選択した行を整形する with clang-format
-autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
-
-" コメント化
-autocmd FileType c,cpp vmap <S-k> :s/\v^(.+)$/\/\/ \1/<Enter>::nohlsearch<Enter>
-
-" アンコメント化
-autocmd FileType c,cpp vmap <S-l> :s/\v^\/\/ (.+)$/\1/g<Enter>::nohlsearch<Enter>
-
+augroup END
 "-----------------------------------------
 
 "[Python] -----------------------------------------
-autocmd FileType python setlocal smartindent
-autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class
-autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=0
+augroup pythonfile
+  autocmd!
+  autocmd FileType python setlocal smartindent
+  autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class
+  autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=0
 
-"TAB文字をスペースにする
-autocmd FileType python setlocal expandtab
+  "TAB文字をスペースにする
+  autocmd FileType python setlocal expandtab
 
-"保存時、行末スペースを削除する
-autocmd BufWritePre *.py :%s/\s\+$//ge
+  "保存時、行末スペースを削除する
+  autocmd BufWritePre *.py :%s/\s\+$//ge
 
+  "[ノーマルモード]
+  "ソースファイル全体を整形する with black (pip install black)
+  autocmd FileType python noremap <C-f> :%!black -q -<Enter>
 
-"[ノーマルモード]
-"ソースファイル全体を整形する with black (pip install black)
-autocmd FileType python noremap <C-f> :%!black -q -<Enter>
+  "[ビジュアルモード]
+  "選択した行を整形する
+  autocmd FileType python vmap <S-f> :%!black -q -<Enter>
 
+  " コメント化
+  autocmd FileType python vmap <S-k> :s/\v^(.+)$/# \1/<Enter>::nohlsearch<Enter>
 
-"[ビジュアルモード]
-"選択した行を整形する
-autocmd FileType python vmap <S-f> :%!black -q -<Enter>
+  " アンコメント化
+  autocmd FileType python vmap <S-l> :s/\v^\# (.+)$/\1/g<Enter>::nohlsearch<Enter>
+  autocmd FileType python inoremap { {}<LEFT>
+  autocmd FileType python inoremap [ []<LEFT>
+  autocmd FileType python inoremap ( ()<LEFT>
+  autocmd FileType python inoremap " ""<LEFT>
+  autocmd FileType python inoremap ' ''<LEFT>
 
-" コメント化
-autocmd FileType python vmap <S-k> :s/\v^(.+)$/# \1/<Enter>::nohlsearch<Enter>
+  "構文ハイライトを有効にする
+  autocmd FileType python syntax on
+  " 括弧入力時の対応する括弧を表示
+  set showmatch
+  set matchtime=1
 
-" アンコメント化
-autocmd FileType python vmap <S-l> :s/\v^\# (.+)$/\1/g<Enter>::nohlsearch<Enter>
-
+augroup END
 "-----------------------------------------
 
 "[YAML] -----------------------------------------
-autocmd FileType yaml setlocal autoindent
-autocmd FileType yaml setlocal tabstop=4 shiftwidth=4 softtabstop=0
+augroup yamlfile
+  autocmd!
+  autocmd FileType yaml setlocal smartindent
+  autocmd FileType yaml setlocal cinwords={,[,:
+  autocmd FileType yaml setlocal tabstop=2 shiftwidth=2 softtabstop=0
 
-"TAB文字をスペースにする
-autocmd FileType yaml setlocal expandtab
+  autocmd FileType yaml inoremap { {}<LEFT>
+  autocmd FileType yaml inoremap [ []<LEFT>
+  autocmd FileType yaml inoremap ( ()<LEFT>
+  autocmd FileType yaml inoremap " ""<LEFT>
+  autocmd FileType yaml inoremap ' ''<LEFT>
 
-"保存時、行末スペースを削除する
-autocmd BufWritePre *.yaml :%s/\s\+$//ge
+  "TAB文字をスペースにする
+  autocmd FileType yaml setlocal expandtab
+
+  "保存時、行末スペースを削除する
+  autocmd BufWritePre *.yaml :%s/\s\+$//ge
+
+  " 括弧入力時の対応する括弧を表示
+  set showmatch
+  set matchtime=1
+
+augroup END
+"-----------------------------------------
 
