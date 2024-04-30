@@ -20,13 +20,7 @@ set nobackup
 "set backupdir=.
 
 "スワップファイルを作成する
-let swapDirectory=$HOME . "/.vim/swap/"
-if !isdirectory(swapDirectory)
-  call mkdir(swapDirectory, "p")
-endif
-
 set swapfile
-let $directory=swapDirectory
 
 "60秒毎に保存
 set updatetime=60000
@@ -325,3 +319,32 @@ augroup yamlfile
 augroup END
 "-----------------------------------------
 
+"[VBS/VB] -----------------------------------------
+augroup vbfile
+  autocmd!
+  autocmd FileType vb setlocal smartindent
+  autocmd FileType vb setlocal tabstop=2 shiftwidth=2 softtabstop=0
+
+  " コメント化
+  autocmd FileType vb vmap <S-k> :s/\v^(.+)$/' \1/<Enter>::nohlsearch<Enter>
+
+  " アンコメント化
+  autocmd FileType vb vmap <S-l> :s/\v^\' (.+)$/\1/g<Enter>::nohlsearch<Enter>
+  autocmd FileType vb inoremap { {}<LEFT>
+  autocmd FileType vb inoremap [ []<LEFT>
+  autocmd FileType vb inoremap ( ()<LEFT>
+  autocmd FileType vb inoremap " ""<LEFT>
+  autocmd FileType vb inoremap ' ''<LEFT>
+
+  "保存時、行末スペースを削除する
+  autocmd BufWritePre *.vbs,*.vb :%s/\s\+$//ge
+
+  "構文ハイライトを有効にする
+  autocmd FileType vb syntax on
+
+  " 括弧入力時の対応する括弧を表示
+  set showmatch
+  set matchtime=1
+
+augroup END
+"-----------------------------------------

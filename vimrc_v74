@@ -1,10 +1,13 @@
 " Vim Setting
 
-" viŒİŠ·‚É‚µ‚È‚¢
+" viäº’æ›ã«ã—ãªã„
 set nocompatible
 
-" •¶šƒR[ƒhE‰üsƒR[ƒhİ’è
+" æ–‡å­—ã‚³ãƒ¼ãƒ‰ãƒ»æ”¹è¡Œã‚³ãƒ¼ãƒ‰è¨­å®š
 set encoding=utf-8
+if has ('win32')
+  set termencoding=cp932
+endif
 
 if has ('unix')
   set fileencodings=ucs-bom,utf-8,cp932,utf-16le,euc-jp,iso-2022-jp
@@ -14,93 +17,87 @@ else
   set fileformats=dos,unix,mac
 endif
 
-" ƒoƒbƒNƒAƒbƒvƒtƒ@ƒCƒ‹‚ğì¬‚µ‚È‚¢
+" ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆã—ãªã„
 set nobackup
-" ƒoƒbƒNƒAƒbƒvƒtƒ@ƒCƒ‹‚Ìo—Íæ
+" ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã®å‡ºåŠ›å…ˆ
 "set backupdir=.
 
-"ƒXƒƒbƒvƒtƒ@ƒCƒ‹‚ğì¬‚·‚é
-let swapDirectory=$HOME . "/.vim/swap/"
-if !isdirectory(swapDirectory)
-  call mkdir(swapDirectory, "p")
-endif
-
+"ã‚¹ãƒ¯ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆã™ã‚‹
 set swapfile
-let $directory=swapDirectory
 
-"60•b–ˆ‚É•Û‘¶
+"60ç§’æ¯ã«ä¿å­˜
 set updatetime=60000
 
-" ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğŠJ‚¢‚Ä‚¢‚éƒtƒ@ƒCƒ‹‚ÌƒfƒBƒŒƒNƒgƒŠ‚ÉˆÚ“®‚³‚¹‚é
+" ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’é–‹ã„ã¦ã„ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã«ç§»å‹•ã•ã›ã‚‹
 set autochdir
 
-" •ÒW’†‚Ìƒtƒ@ƒCƒ‹‚ª•ÏX‚³‚ê‚½‚ç©“®‚Å“Ç‚İ’¼‚·
+" ç·¨é›†ä¸­ã®ãƒ•ã‚¡ã‚¤ãƒ«ãŒå¤‰æ›´ã•ã‚ŒãŸã‚‰è‡ªå‹•ã§èª­ã¿ç›´ã™
 set autoread
-" ƒoƒbƒtƒ@‚ª•ÒW’†‚Å‚à‚»‚Ì‘¼‚Ìƒtƒ@ƒCƒ‹‚ğŠJ‚¯‚é‚æ‚¤‚É
+" ãƒãƒƒãƒ•ã‚¡ãŒç·¨é›†ä¸­ã§ã‚‚ãã®ä»–ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã‘ã‚‹ã‚ˆã†ã«
 set hidden
-" “ü—Í’†‚ÌƒRƒ}ƒ“ƒh‚ğƒXƒe[ƒ^ƒX‚É•\¦‚·‚é
+" å…¥åŠ›ä¸­ã®ã‚³ãƒãƒ³ãƒ‰ã‚’ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã«è¡¨ç¤ºã™ã‚‹
 set showcmd
 
 
-" Œ©‚½–ÚŒn
-" s”Ô†‚ğ•\¦
+" è¦‹ãŸç›®ç³»
+" è¡Œç•ªå·ã‚’è¡¨ç¤º
 set number
-" ƒJ[ƒ\ƒ‹‚ÌˆÊ’uî•ñ‚ğ•\¦
+" ã‚«ãƒ¼ã‚½ãƒ«ã®ä½ç½®æƒ…å ±ã‚’è¡¨ç¤º
 "set ruler
 
-" Œ»İ‚Ìs‚ğ‹­’²•\¦
+" ç¾åœ¨ã®è¡Œã‚’å¼·èª¿è¡¨ç¤º
 set cursorline
-" Œ»İ‚Ìs‚ğ‹­’²•\¦icj
+" ç¾åœ¨ã®è¡Œã‚’å¼·èª¿è¡¨ç¤ºï¼ˆç¸¦ï¼‰
 "set cursorcolumn
-" s––‚Ì1•¶šæ‚Ü‚ÅƒJ[ƒ\ƒ‹‚ğˆÚ“®‚Å‚«‚é‚æ‚¤‚É
+" è¡Œæœ«ã®1æ–‡å­—å…ˆã¾ã§ã‚«ãƒ¼ã‚½ãƒ«ã‚’ç§»å‹•ã§ãã‚‹ã‚ˆã†ã«
 set virtualedit=onemore
-" ƒr[ƒv‰¹‚ğ‰Â‹‰»
+" ãƒ“ãƒ¼ãƒ—éŸ³ã‚’å¯è¦–åŒ–
 set visualbell
-" ƒXƒe[ƒ^ƒXƒ‰ƒCƒ“‚ğí‚É•\¦
+" ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒ©ã‚¤ãƒ³ã‚’å¸¸ã«è¡¨ç¤º
 set laststatus=2
-" ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚Ì•âŠ®
+" ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã®è£œå®Œ
 set wildmode=list:longest
 
-" ‘SŠp•‚Å•\¦‚·‚é
+" å…¨è§’å¹…ã§è¡¨ç¤ºã™ã‚‹
 if has("multi_byte")
     set ambiwidth=double
 endif
 
-" Ü‚è•Ô‚µ‚µ‚È‚¢
+" æŠ˜ã‚Šè¿”ã—ã—ãªã„
 set nowrap
 
-" TabŒn
-" •s‰Â‹•¶š‚ğ‰Â‹‰»(ƒ^ƒu‚ªu?-v‚Æ•\¦‚³‚ê‚é)
+" Tabç³»
+" ä¸å¯è¦–æ–‡å­—ã‚’å¯è¦–åŒ–(ã‚¿ãƒ–ãŒã€Œ?-ã€ã¨è¡¨ç¤ºã•ã‚Œã‚‹)
 set list
 set listchars=tab:>-,trail:-,eol:$
 
-" ƒJ[ƒ\ƒ‹Œn
+" ã‚«ãƒ¼ã‚½ãƒ«ç³»
 set whichwrap=b,s,[,],<,>
 
-" ƒoƒbƒNƒXƒy[ƒX‚ğA‹ó”’As––As“ª‚Å‚àg‚¦‚é‚æ‚¤‚É‚·‚é
+" ãƒãƒƒã‚¯ã‚¹ãƒšãƒ¼ã‚¹ã‚’ã€ç©ºç™½ã€è¡Œæœ«ã€è¡Œé ­ã§ã‚‚ä½¿ãˆã‚‹ã‚ˆã†ã«ã™ã‚‹
 set backspace=indent,eol,start
 
-" ŒŸõŒn
-" ŒŸõ•¶š—ñ‚ª¬•¶š‚Ìê‡‚Í‘å•¶š¬•¶š‚ğ‹æ•Ê‚È‚­ŒŸõ‚·‚é
+" æ¤œç´¢ç³»
+" æ¤œç´¢æ–‡å­—åˆ—ãŒå°æ–‡å­—ã®å ´åˆã¯å¤§æ–‡å­—å°æ–‡å­—ã‚’åŒºåˆ¥ãªãæ¤œç´¢ã™ã‚‹
 set ignorecase
-" ŒŸõ•¶š—ñ‚É‘å•¶š‚ªŠÜ‚Ü‚ê‚Ä‚¢‚éê‡‚Í‹æ•Ê‚µ‚ÄŒŸõ‚·‚é
+" æ¤œç´¢æ–‡å­—åˆ—ã«å¤§æ–‡å­—ãŒå«ã¾ã‚Œã¦ã„ã‚‹å ´åˆã¯åŒºåˆ¥ã—ã¦æ¤œç´¢ã™ã‚‹
 set smartcase
-" ŒŸõ•¶š—ñ“ü—Í‚É‡Ÿ‘ÎÛ•¶š—ñ‚Éƒqƒbƒg‚³‚¹‚é
+" æ¤œç´¢æ–‡å­—åˆ—å…¥åŠ›æ™‚ã«é †æ¬¡å¯¾è±¡æ–‡å­—åˆ—ã«ãƒ’ãƒƒãƒˆã•ã›ã‚‹
 set incsearch
-" ŒŸõ‚ÉÅŒã‚Ü‚Ås‚Á‚½‚çÅ‰‚É–ß‚é
+" æ¤œç´¢æ™‚ã«æœ€å¾Œã¾ã§è¡Œã£ãŸã‚‰æœ€åˆã«æˆ»ã‚‹
 set wrapscan
-" ŒŸõŒê‚ğƒnƒCƒ‰ƒCƒg•\¦
+" æ¤œç´¢èªã‚’ãƒã‚¤ãƒ©ã‚¤ãƒˆè¡¨ç¤º
 set hlsearch
-" ESC˜A‘Å‚ÅƒnƒCƒ‰ƒCƒg‰ğœ
+" ESCé€£æ‰“ã§ãƒã‚¤ãƒ©ã‚¤ãƒˆè§£é™¤
 nmap <Esc><Esc> :nohlsearch<CR><Esc>
 
-" ƒy[ƒXƒgƒ‚[ƒh‚ÌØ‚è‘Ö‚¦$
+" ãƒšãƒ¼ã‚¹ãƒˆãƒ¢ãƒ¼ãƒ‰ã®åˆ‡ã‚Šæ›¿ãˆ$
 set pastetoggle=<F2>
 
-" ƒ„ƒ“ƒN^ƒvƒbƒg‚ÉƒNƒŠƒbƒvƒ{[ƒh‚ğg—p‚·‚é
+" ãƒ¤ãƒ³ã‚¯ï¼ãƒ—ãƒƒãƒˆæ™‚ã«ã‚¯ãƒªãƒƒãƒ—ãƒœãƒ¼ãƒ‰ã‚’ä½¿ç”¨ã™ã‚‹
 set clipboard+=unnamed
 
-" ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“•âŠ®
+" ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³è£œå®Œ
 set wildmenu
 
 set statusline=%F
@@ -113,11 +110,11 @@ set statusline+=[%{(&fenc!=''?&fenc:$enc).':'.&ff}]
 
 set background=dark
 
-" ƒtƒ@ƒCƒ‹Šg’£q•Ê ƒL[ƒ{[ƒhƒVƒ‡[ƒgƒJƒbƒg
+" ãƒ•ã‚¡ã‚¤ãƒ«æ‹¡å¼µå­åˆ¥ ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆ
 filetype on
 filetype plugin indent on
 
-" Filetype‚ªŒˆ‚Ü‚ç‚È‚¢ê‡‚Ítext‚É‚·‚é"
+" FiletypeãŒæ±ºã¾ã‚‰ãªã„å ´åˆã¯textã«ã™ã‚‹"
 function! s:NoneFileTypeSet()
   if len(&filetype) == 0
     set filetype=text
@@ -135,10 +132,10 @@ autocmd BufEnter * call s:NoneFileTypeSet()
 "[text] -----------------------------------------
 augroup text
   autocmd!
-  " ˆø—pƒRƒƒ“ƒg‰»
+  " å¼•ç”¨ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
   autocmd FileType text vmap <S-k> :s/\v^(.*)$/> \1/<Enter>::nohlsearch<Enter>
 
-  " ˆø—pƒAƒ“ƒRƒƒ“ƒg‰»
+  " å¼•ç”¨ã‚¢ãƒ³ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
   autocmd FileType text vmap <S-l> :s/\v^> (.*)$/\1/g<Enter>::nohlsearch<Enter>
   autocmd FileType text inoremap { {}<LEFT>
   autocmd FileType text inoremap [ []<LEFT>
@@ -147,14 +144,14 @@ augroup text
   autocmd FileType text inoremap ' ''<LEFT>
   autocmd FileType text inoremap < <><LEFT>
 
-  " TAB•¶š‚ğŒ©‚½–Úã‰½•¶š‚Å•\¦‚·‚é‚©
+  " TABæ–‡å­—ã‚’è¦‹ãŸç›®ä¸Šä½•æ–‡å­—ã§è¡¨ç¤ºã™ã‚‹ã‹
   autocmd FileType text setlocal tabstop=4
 
-  " ©“®ƒCƒ“ƒfƒ“ƒg‚Å‚ÌƒCƒ“ƒfƒ“ƒg‚Ì’·‚³
+  " è‡ªå‹•ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆã§ã®ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆã®é•·ã•
   autocmd FileType text setlocal shiftwidth=4
 
-  " TABƒL[‰Ÿ‰º‚É‘}“ü‚·‚éƒXƒy[ƒX‚Ì”
-  " (İ’è'tabstop'‚É‡‚í‚¹‚é)
+  " TABã‚­ãƒ¼æŠ¼ä¸‹æ™‚ã«æŒ¿å…¥ã™ã‚‹ã‚¹ãƒšãƒ¼ã‚¹ã®æ•°
+  " (è¨­å®š'tabstop'ã«åˆã‚ã›ã‚‹)
   autocmd FileType text setlocal softtabstop=0
 augroup END
 
@@ -163,13 +160,13 @@ augroup vimfile
   autocmd!
   autocmd FileType vim setlocal smartindent shiftwidth=2 tabstop=2 softtabstop=0
 
-  "•Û‘¶As––ƒXƒy[ƒX‚ğíœ‚·‚é
+  "ä¿å­˜æ™‚ã€è¡Œæœ«ã‚¹ãƒšãƒ¼ã‚¹ã‚’å‰Šé™¤ã™ã‚‹
   autocmd BufWritePre *.vimrc,*.gvimrc :%s/\s\+$//ge
 
-  " ƒRƒƒ“ƒg‰»
+  " ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
   autocmd FileType vim vmap <S-k> :s/\v^(.*)$/" \1/<Enter>::nohlsearch<Enter>
 
-  " ƒAƒ“ƒRƒƒ“ƒg‰»
+  " ã‚¢ãƒ³ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
   autocmd FileType vim vmap <S-l> :s/\v^" (.*)$/\1/g<Enter>::nohlsearch<Enter>
   autocmd FileType vim inoremap { {}<LEFT>
   autocmd FileType vim inoremap [ []<LEFT>
@@ -177,13 +174,13 @@ augroup vimfile
   autocmd FileType vim inoremap " ""<LEFT>
   autocmd FileType vim inoremap ' ''<LEFT>
 
-  "TAB•¶š‚ğƒXƒy[ƒX‚É‚·‚é
+  "TABæ–‡å­—ã‚’ã‚¹ãƒšãƒ¼ã‚¹ã«ã™ã‚‹
   autocmd FileType vim setlocal expandtab
 
-  "\•¶ƒnƒCƒ‰ƒCƒg‚ğ—LŒø‚É‚·‚é
+  "æ§‹æ–‡ãƒã‚¤ãƒ©ã‚¤ãƒˆã‚’æœ‰åŠ¹ã«ã™ã‚‹
   autocmd FileType vim syntax on
 
-  " Š‡ŒÊ“ü—Í‚Ì‘Î‰‚·‚éŠ‡ŒÊ‚ğ•\¦
+  " æ‹¬å¼§å…¥åŠ›æ™‚ã®å¯¾å¿œã™ã‚‹æ‹¬å¼§ã‚’è¡¨ç¤º
   set showmatch
   set matchtime=1
 
@@ -194,13 +191,13 @@ augroup sqlfile
   autocmd!
   autocmd FileType sql setlocal smartindent shiftwidth=4 tabstop=4 softtabstop=0
 
-  "•Û‘¶As––ƒXƒy[ƒX‚ğíœ‚·‚é
+  "ä¿å­˜æ™‚ã€è¡Œæœ«ã‚¹ãƒšãƒ¼ã‚¹ã‚’å‰Šé™¤ã™ã‚‹
   autocmd BufWritePre *.sql :%s/\s\+$//ge
 
-  " ƒRƒƒ“ƒg‰»
+  " ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
   autocmd FileType sql vmap <S-k> :s/\v^(.*)$/-- \1/<Enter>::nohlsearch<Enter>
 
-  " ƒAƒ“ƒRƒƒ“ƒg‰»
+  " ã‚¢ãƒ³ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
   autocmd FileType sql vmap <S-l> :s/\v^-- (.*)$/\1/g<Enter>::nohlsearch<Enter>
   autocmd FileType sql inoremap { {}<LEFT>
   autocmd FileType sql inoremap [ []<LEFT>
@@ -208,10 +205,10 @@ augroup sqlfile
   autocmd FileType sql inoremap " ""<LEFT>
   autocmd FileType sql inoremap ' ''<LEFT>
 
-  "\•¶ƒnƒCƒ‰ƒCƒg‚ğ—LŒø‚É‚·‚é
+  "æ§‹æ–‡ãƒã‚¤ãƒ©ã‚¤ãƒˆã‚’æœ‰åŠ¹ã«ã™ã‚‹
   autocmd FileType sql syntax on
 
-  " Š‡ŒÊ“ü—Í‚Ì‘Î‰‚·‚éŠ‡ŒÊ‚ğ•\¦
+  " æ‹¬å¼§å…¥åŠ›æ™‚ã®å¯¾å¿œã™ã‚‹æ‹¬å¼§ã‚’è¡¨ç¤º
   set showmatch
   set matchtime=1
 
@@ -223,25 +220,21 @@ augroup cppfile
   autocmd!
   autocmd FileType c,cpp setlocal cindent shiftwidth=4 tabstop=4 softtabstop=0
 
-  "•Û‘¶As––ƒXƒy[ƒX‚ğíœ‚·‚é
+  "ä¿å­˜æ™‚ã€è¡Œæœ«ã‚¹ãƒšãƒ¼ã‚¹ã‚’å‰Šé™¤ã™ã‚‹
   autocmd BufWritePre *.c,*.cpp,*.h :%s/\s\+$//ge
 
-  " termdebugƒvƒ‰ƒOƒCƒ“‚ğ“Ç‚İ‚Ş
-  autocmd FileType c,cpp packadd termdebug
-  autocmd FileType c,cpp setlocal mouse=a
-
-  "[ƒm[ƒ}ƒ‹ƒ‚[ƒh]
-  "ƒ\[ƒXƒtƒ@ƒCƒ‹‘S‘Ì‚ğ®Œ`‚·‚é with clang-format
+  "[ãƒãƒ¼ãƒãƒ«ãƒ¢ãƒ¼ãƒ‰]
+  "ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«å…¨ä½“ã‚’æ•´å½¢ã™ã‚‹ with clang-format
   autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
 
-  "[ƒrƒWƒ…ƒAƒ‹ƒ‚[ƒh]
-  "‘I‘ğ‚µ‚½s‚ğ®Œ`‚·‚é with clang-format
+  "[ãƒ“ã‚¸ãƒ¥ã‚¢ãƒ«ãƒ¢ãƒ¼ãƒ‰]
+  "é¸æŠã—ãŸè¡Œã‚’æ•´å½¢ã™ã‚‹ with clang-format
   autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
 
-  " ƒRƒƒ“ƒg‰»
+  " ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
   autocmd FileType c,cpp vmap <S-k> :s/\v^(.*)$/\/\/ \1/<Enter>::nohlsearch<Enter>
 
-  " ƒAƒ“ƒRƒƒ“ƒg‰»
+  " ã‚¢ãƒ³ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
   autocmd FileType c,cpp vmap <S-l> :s/\v^\/\/ (.*)$/\1/g<Enter>::nohlsearch<Enter>
   autocmd FileType c,cpp inoremap { {}<LEFT>
   autocmd FileType c,cpp inoremap [ []<LEFT>
@@ -249,9 +242,9 @@ augroup cppfile
   autocmd FileType c,cpp inoremap " ""<LEFT>
   autocmd FileType c,cpp inoremap ' ''<LEFT>
 
-  "\•¶ƒnƒCƒ‰ƒCƒg‚ğ—LŒø‚É‚·‚é
+  "æ§‹æ–‡ãƒã‚¤ãƒ©ã‚¤ãƒˆã‚’æœ‰åŠ¹ã«ã™ã‚‹
   autocmd FileType c,cpp syntax on
-  " Š‡ŒÊ“ü—Í‚Ì‘Î‰‚·‚éŠ‡ŒÊ‚ğ•\¦
+  " æ‹¬å¼§å…¥åŠ›æ™‚ã®å¯¾å¿œã™ã‚‹æ‹¬å¼§ã‚’è¡¨ç¤º
   set showmatch
   set matchtime=1
 
@@ -265,24 +258,24 @@ augroup pythonfile
   autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class
   autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=0
 
-  "TAB•¶š‚ğƒXƒy[ƒX‚É‚·‚é
+  "TABæ–‡å­—ã‚’ã‚¹ãƒšãƒ¼ã‚¹ã«ã™ã‚‹
   autocmd FileType python setlocal expandtab
 
-  "•Û‘¶As––ƒXƒy[ƒX‚ğíœ‚·‚é
+  "ä¿å­˜æ™‚ã€è¡Œæœ«ã‚¹ãƒšãƒ¼ã‚¹ã‚’å‰Šé™¤ã™ã‚‹
   autocmd BufWritePre *.py :%s/\s\+$//ge
 
-  "[ƒm[ƒ}ƒ‹ƒ‚[ƒh]
-  "ƒ\[ƒXƒtƒ@ƒCƒ‹‘S‘Ì‚ğ®Œ`‚·‚é with black (pip install black)
+  "[ãƒãƒ¼ãƒãƒ«ãƒ¢ãƒ¼ãƒ‰]
+  "ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«å…¨ä½“ã‚’æ•´å½¢ã™ã‚‹ with black (pip install black)
   autocmd FileType python noremap <C-f> :%!black -q -<Enter>
 
-  "[ƒrƒWƒ…ƒAƒ‹ƒ‚[ƒh]
-  "‘I‘ğ‚µ‚½s‚ğ®Œ`‚·‚é
+  "[ãƒ“ã‚¸ãƒ¥ã‚¢ãƒ«ãƒ¢ãƒ¼ãƒ‰]
+  "é¸æŠã—ãŸè¡Œã‚’æ•´å½¢ã™ã‚‹
   autocmd FileType python vmap <S-f> :%!black -q -<Enter>
 
-  " ƒRƒƒ“ƒg‰»
+  " ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
   autocmd FileType python vmap <S-k> :s/\v^(.+)$/# \1/<Enter>::nohlsearch<Enter>
 
-  " ƒAƒ“ƒRƒƒ“ƒg‰»
+  " ã‚¢ãƒ³ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
   autocmd FileType python vmap <S-l> :s/\v^\# (.+)$/\1/g<Enter>::nohlsearch<Enter>
   autocmd FileType python inoremap { {}<LEFT>
   autocmd FileType python inoremap [ []<LEFT>
@@ -290,9 +283,9 @@ augroup pythonfile
   autocmd FileType python inoremap " ""<LEFT>
   autocmd FileType python inoremap ' ''<LEFT>
 
-  "\•¶ƒnƒCƒ‰ƒCƒg‚ğ—LŒø‚É‚·‚é
+  "æ§‹æ–‡ãƒã‚¤ãƒ©ã‚¤ãƒˆã‚’æœ‰åŠ¹ã«ã™ã‚‹
   autocmd FileType python syntax on
-  " Š‡ŒÊ“ü—Í‚Ì‘Î‰‚·‚éŠ‡ŒÊ‚ğ•\¦
+  " æ‹¬å¼§å…¥åŠ›æ™‚ã®å¯¾å¿œã™ã‚‹æ‹¬å¼§ã‚’è¡¨ç¤º
   set showmatch
   set matchtime=1
 
@@ -312,16 +305,45 @@ augroup yamlfile
   autocmd FileType yaml inoremap " ""<LEFT>
   autocmd FileType yaml inoremap ' ''<LEFT>
 
-  "TAB•¶š‚ğƒXƒy[ƒX‚É‚·‚é
+  "TABæ–‡å­—ã‚’ã‚¹ãƒšãƒ¼ã‚¹ã«ã™ã‚‹
   autocmd FileType yaml setlocal expandtab
 
-  "•Û‘¶As––ƒXƒy[ƒX‚ğíœ‚·‚é
+  "ä¿å­˜æ™‚ã€è¡Œæœ«ã‚¹ãƒšãƒ¼ã‚¹ã‚’å‰Šé™¤ã™ã‚‹
   autocmd BufWritePre *.yaml :%s/\s\+$//ge
 
-  " Š‡ŒÊ“ü—Í‚Ì‘Î‰‚·‚éŠ‡ŒÊ‚ğ•\¦
+  " æ‹¬å¼§å…¥åŠ›æ™‚ã®å¯¾å¿œã™ã‚‹æ‹¬å¼§ã‚’è¡¨ç¤º
   set showmatch
   set matchtime=1
 
 augroup END
 "-----------------------------------------
 
+"[VBS/VB] -----------------------------------------
+augroup vbfile
+  autocmd!
+  autocmd FileType vb setlocal smartindent
+  autocmd FileType vb setlocal tabstop=2 shiftwidth=2 softtabstop=0
+
+  " ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
+  autocmd FileType vb vmap <S-k> :s/\v^(.+)$/' \1/<Enter>::nohlsearch<Enter>
+
+  " ã‚¢ãƒ³ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
+  autocmd FileType vb vmap <S-l> :s/\v^\' (.+)$/\1/g<Enter>::nohlsearch<Enter>
+  autocmd FileType vb inoremap { {}<LEFT>
+  autocmd FileType vb inoremap [ []<LEFT>
+  autocmd FileType vb inoremap ( ()<LEFT>
+  autocmd FileType vb inoremap " ""<LEFT>
+  autocmd FileType vb inoremap ' ''<LEFT>
+
+  "ä¿å­˜æ™‚ã€è¡Œæœ«ã‚¹ãƒšãƒ¼ã‚¹ã‚’å‰Šé™¤ã™ã‚‹
+  autocmd BufWritePre *.vbs,*.vb :%s/\s\+$//ge
+
+  "æ§‹æ–‡ãƒã‚¤ãƒ©ã‚¤ãƒˆã‚’æœ‰åŠ¹ã«ã™ã‚‹
+  autocmd FileType vb syntax on
+
+  " æ‹¬å¼§å…¥åŠ›æ™‚ã®å¯¾å¿œã™ã‚‹æ‹¬å¼§ã‚’è¡¨ç¤º
+  set showmatch
+  set matchtime=1
+
+augroup END
+"-----------------------------------------
