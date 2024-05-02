@@ -1,10 +1,8 @@
 " Vim Setting
 
-" vi互換にしない
-set nocompatible
-
-" 文字コード・改行コード設定
 set encoding=utf-8
+scriptencoding utf-8
+
 
 if has ('unix')
   set fileencodings=ucs-bom,utf-8,cp932,utf-16le,euc-jp,iso-2022-jp
@@ -12,6 +10,11 @@ if has ('unix')
 else
   set fileencodings=ucs-bom,utf-8,cp932,utf-16le,euc-jp,iso-2022-jp
   set fileformats=dos,unix,mac
+endif
+
+" vi互換にしない
+if &compatible
+  set nocompatible
 endif
 
 " バックアップファイルを作成しない
