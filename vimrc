@@ -46,6 +46,9 @@ set autoread
 " バッファが編集中でもその他のファイルを開けるようにする
 set hidden
 
+" 起動時の空バッファの扱いを変更する。
+autocmd BufLeave * if bufnr('%') == 1 && bufname('%') == '' | setlocal bufhidden=wipe | endif
+
 
 " ------------------------------------------------------------
 " 表示
@@ -144,6 +147,35 @@ set hlsearch
 
 " ESC連打でハイライト解除
 nmap <Esc><Esc> :nohlsearch<CR>
+
+" ------------------------------------------------------------
+" Git Bash ターミナルの追加
+" ------------------------------------------------------------
+
+" Windows（32ビットまたは64ビット）環境の場合のみ実行
+if has('win32') || has('win64')
+
+  " Git Bash を開く専用コマンド :term_git を定義
+  command! TermGit call s:OpenGitBash()
+
+  function! s:OpenGitBash() abort
+    " Git Bash の実行ファイルパス
+    let l:bash_path = 'C:/Program Files/Git/bin/bash.exe'
+
+    if filereadable(l:bash_path)
+      let l:options = '-i -l'
+      " ターミナルで Git Bash をログインシェルとして起動
+      execute 'belowright terminal ++close "' . l:bash_path . '" ' . l:options
+    else
+      echoerr 'Git Bash が見つかりません: ' . l:bash_path
+    endif
+  endfunction
+
+  " コマンドラインで 'term_git' と打ったら"TermGit"に自動置換して起動
+  cabbrev term_git TermGit
+
+endif
+
 
 
 " ------------------------------------------------------------
