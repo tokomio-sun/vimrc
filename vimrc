@@ -149,23 +149,38 @@ set hlsearch
 nmap <Esc><Esc> :nohlsearch<CR>
 
 " ------------------------------------------------------------
-" Git Bash ターミナルの追加
+" Git Bash ターミナルの起動
 " ------------------------------------------------------------
 
 " Windows（32ビットまたは64ビット）環境の場合のみ実行
 if has('win32') || has('win64')
 
   " Git Bash を開く専用コマンド :term_git を定義
-  command! TermGit call s:OpenGitBash()
+  command! TermGit call Vimrc_OpenGitBash()
 
-  function! s:OpenGitBash() abort
+  function! Vimrc_OpenGitBash() abort
     " Git Bash の実行ファイルパス
     let l:bash_path = 'C:/Program Files/Git/bin/bash.exe'
 
+    " Git Bash のログインスクリプトによる 'cd ~' (ホームへの移動) をスキップさせる
+    let $CHERE_INVOKING = 1
+
+    " ++dir=... で Vim のカレントディレクトリを明示指定
+    let l:cwd = fnameescape(getcwd())
+
     if filereadable(l:bash_path)
       let l:options = '-i -l'
+
       " ターミナルで Git Bash をログインシェルとして起動
-      execute 'belowright terminal ++close "' . l:bash_path . '" ' . l:options
+      " 1. 画面下に高さ12行の空きウィンドウを作成
+      belowright 12new
+
+      " 2. 作成したカレントウィンドウ内でターミナルを起動
+      call term_start([l:bash_path, '-i', '-l'], {
+            \ 'cwd': getcwd(),
+            \ 'term_finish': 'close',
+            \ 'curwin': 1,
+            \ })
     else
       echoerr 'Git Bash が見つかりません: ' . l:bash_path
     endif
@@ -176,6 +191,39 @@ if has('win32') || has('win64')
 
 endif
 
+
+" ------------------------------------------------------------
+" PowerShell 5.1 ターミナルの起動
+" ------------------------------------------------------------
+
+" Windows（32ビットまたは64ビット）環境の場合のみ実行
+if has('win32') || has('win64')
+
+  " PowerShell 5.1 を開く専用コマンド :term_pwsh を定義
+  command! TermPowerShell call Vimrc_OpenPowerShell51()
+
+  function! Vimrc_OpenPowerShell51() abort
+    " PowerShell 5.1 の実行ファイルパス
+    let l:ps_path = 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe'
+
+     if filereadable(l:ps_path)
+       " 1. 画面下に高さ 12 行の新規ウィンドウを作成
+       belowright 12new
+
+       " 2. 作成したウィンドウ内で PowerShell を起動（Vimのカレントディレクトリを渡す）
+       call term_start([l:ps_path, '-NoExit', '-ExecutionPolicy', 'Bypass'], {
+         \ 'cwd': getcwd(),
+         \ 'term_finish': 'close',
+         \ 'curwin': 1,
+         \ })
+    else
+      echoerr 'PowerShell 5.1 が見つかりません: ' . l:ps_path
+    endif
+  endfunction
+
+  " コマンドラインで 'term_git' と打ったら"TermPowerShell"に自動置換して起動
+  cabbrev term_pwsh TermPowerShell
+endif
 
 
 " ------------------------------------------------------------
@@ -226,7 +274,7 @@ autocmd BufEnter * call s:SetDefaultFileSettings()
 " コメント化・アンコメント化
 " ------------------------------------------------------------
 
-function! s:ToggleComment(comment) range
+function! ToggleComment(comment) range
     let comment = escape(a:comment, '\')
     let all_commented = 1
 
@@ -257,7 +305,7 @@ augroup filetype_text
     autocmd!
 
     " 引用コメント化・引用アンコメント化
-    autocmd FileType text xnoremap <buffer> <silent> <C-_> :<C-U>call <SID>ToggleComment('>')<CR>
+    autocmd FileType text xnoremap <buffer> <silent> <C-K> :call ToggleComment('>')<CR>
 
     " インデント
     autocmd FileType text setlocal tabstop=4 shiftwidth=4 softtabstop=0
@@ -278,7 +326,7 @@ augroup filetype_vim
     autocmd BufWritePre *.vimrc,*.gvimrc :%s/\s\+$//ge
 
     " コメント化・アンコメント化
-    autocmd FileType vim xnoremap <buffer> <silent> <C-_> :<C-U>call <SID>ToggleComment('"')<CR>
+    autocmd FileType vim xnoremap <buffer> <silent> <C-K> :call ToggleComment('"')<CR>
 
     " TAB文字をスペースにする
     autocmd FileType vim setlocal expandtab
@@ -299,7 +347,7 @@ augroup filetype_sql
     autocmd BufWritePre *.sql :%s/\s\+$//ge
 
     " コメント化・アンコメント化
-    autocmd FileType sql xnoremap <buffer> <silent> <C-_> :<C-U>call <SID>ToggleComment('--')<CR>
+    autocmd FileType sql xnoremap <buffer> <silent> <C-K> :call ToggleComment('--')<CR>
 augroup END
 
 
@@ -312,6 +360,12 @@ augroup filetype_cpp
 
     " インデント
     autocmd FileType c,cpp setlocal cindent shiftwidth=4 tabstop=4 softtabstop=0
+
+    " コメント引用
+    autocmd FileType text vmap <S-k> :s/\v^(.*)$/> \1/<Enter>::nohlsearch<Enter>
+
+    " アンコメント引用
+    autocmd FileType text vmap <S-l> :s/\v^> (.*)$/\1/g<Enter>::nohlsearch<Enter>
 
     " 保存時、行末スペースを削除
     autocmd BufWritePre *.c,*.cpp,*.h :%s/\s\+$//ge
@@ -329,7 +383,7 @@ augroup filetype_cpp
     autocmd FileType c,cpp vnoremap <buffer> <F7> :!clang-format --style Microsoft<CR>
 
     " コメント化・アンコメント化
-    autocmd FileType c,cpp xnoremap <buffer> <silent> <C-_> :<C-U>call <SID>ToggleComment('//')<CR>
+    autocmd FileType c,cpp xnoremap <buffer> <silent> <C-K> :call ToggleComment('//')<CR>
 augroup END
 
 
@@ -356,7 +410,7 @@ augroup filetype_python
     autocmd FileType python vnoremap <buffer> <F7> :!black -q -<CR>
 
     " コメント化・アンコメント化
-    autocmd FileType python xnoremap <buffer> <silent> <C-_> :<C-U>call <SID>ToggleComment('#')<CR>
+    autocmd FileType python xnoremap <buffer> <silent> <C-K> :call ToggleComment('#')<CR>
 augroup END
 
 
@@ -379,6 +433,71 @@ augroup filetype_yaml
 
 augroup END
 
+" ============================================================
+" バッチファイル(BAT, CMD)
+" ============================================================
+
+function! ToggleBatComment() range
+    let all_commented = 1
+
+    for lnum in range(a:firstline, a:lastline)
+        if getline(lnum) !~? '^\s*REM\>'
+            let all_commented = 0
+            break
+        endif
+    endfor
+
+    if all_commented
+        execute a:firstline . ',' . a:lastline
+                    \ . 's/^\(\s*\)REM\>\s\?/\1/'
+    else
+        execute a:firstline . ',' . a:lastline
+                    \ . 's/^\(\s*\)/\1REM /'
+    endif
+endfunction
+
+augroup filetype_bat
+    autocmd!
+
+    " 自動インデント
+    autocmd FileType dosbatch,bat setlocal smartindent
+
+    " インデント
+    autocmd FileType dosbatch,bat setlocal tabstop=2 shiftwidth=2 softtabstop=0
+
+    " コメント化・アンコメント化
+    autocmd FileType dosbatch,bat xnoremap <buffer> <silent> <C-K> :call ToggleBatComment()<CR>
+
+    " 保存時、行末スペースを削除
+    autocmd BufWritePre *.bat,*.cmd :%s/\s\+$//ge
+
+    " 文字コードを強制する
+    autocmd FileType dosbatch,bat setlocal fileencoding=cp932 fileformat=dos
+augroup END
+
+" ============================================================
+" Windows INIファイル(INI)
+" ============================================================
+
+augroup filetype_ini
+    autocmd!
+
+    " 自動インデント
+    autocmd FileType dosini setlocal smartindent
+
+    " インデント
+    autocmd FileType dosini setlocal tabstop=2 shiftwidth=2 softtabstop=0
+
+    " コメント化・アンコメント化
+    autocmd FileType dosini xnoremap <buffer> <silent> <C-K> :call ToggleComment(';')<CR>
+
+    " 保存時、行末スペースを削除
+    autocmd BufWritePre *.ini :%s/\s\+$//ge
+
+    " 文字コードを強制する
+    autocmd FileType dosini setlocal fileencoding=cp932 fileformat=dos
+augroup END
+
 
 " ============================================================
 " VB / VBS
@@ -394,9 +513,8 @@ augroup filetype_vb
     autocmd FileType vb setlocal tabstop=2 shiftwidth=2 softtabstop=0
 
     " コメント化・アンコメント化
-    autocmd FileType vb xnoremap <buffer> <silent> <C-_> :<C-U>call <SID>ToggleComment("'")<CR>
+    autocmd FileType vb xnoremap <buffer> <silent> <C-K> :call ToggleComment("'")<CR>
 
     " 保存時、行末スペースを削除
     autocmd BufWritePre *.vbs,*.vb :%s/\s\+$//ge
 augroup END
-

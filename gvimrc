@@ -1,6 +1,3 @@
-" 色テーマを指定する
-colorscheme desert
-
 "ウィンドウサイズを指定する
 set columns=120
 set lines=25
