@@ -1,101 +1,154 @@
-" Vim Setting
+"
+" ============================================================
+" Vim 基本設定
+" ============================================================
+
+" ------------------------------------------------------------
+" 文字コード・改行コード
+" ------------------------------------------------------------
+
+scriptencoding utf-8
+
+" ファイルを開く際の文字コード判定順
+set fileencodings=ucs-bom,utf-8,cp932,utf-16le
+
+if has('unix')
+    set fileformats=unix,dos,mac
+else
+    set fileformats=dos,unix,mac
+endif
 
 " vi互換にしない
-set nocompatible
-
-" 文字コード・改行コード設定
-set encoding=utf-8
-
-if has ('unix')
-  set fileencodings=ucs-bom,utf-8,cp932,utf-16le,euc-jp,iso-2022-jp
-  set fileformats=unix,dos,mac
-else
-  set fileencodings=ucs-bom,utf-8,cp932,utf-16le,euc-jp,iso-2022-jp
-  set fileformats=dos,unix,mac
+if &compatible
+    set nocompatible
 endif
+
+
+" ------------------------------------------------------------
+" ファイル・バッファ
+" ------------------------------------------------------------
 
 " バックアップファイルを作成しない
 set nobackup
-" バックアップファイルの出力先
-"set backupdir=.
 
-"スワップファイルを作成する
+" バックアップファイルの出力先
+" set backupdir=.
+
+" スワップファイルを作成する
 set swapfile
 
-"60秒毎に保存
-set updatetime=60000
-
-" カレントディレクトリを開いているファイルのディレクトリに移動させる
+" 編集中のファイルのディレクトリをカレントディレクトリにする
 set autochdir
 
 " 編集中のファイルが変更されたら自動で読み直す
 set autoread
-" バッファが編集中でもその他のファイルを開けるように
+
+" バッファが編集中でもその他のファイルを開けるようにする
 set hidden
-" 入力中のコマンドをステータスに表示する
-set showcmd
 
 
-" 見た目系
+" ------------------------------------------------------------
+" 表示
+" ------------------------------------------------------------
+
 " 行番号を表示
 set number
-" カーソルの位置情報を表示
-"set ruler
 
 " 現在の行を強調表示
 set cursorline
-" 現在の行を強調表示（縦）
-"set cursorcolumn
-" 行末の1文字先までカーソルを移動できるように
+
+" 現在の列を強調表示
+" set cursorcolumn
+
+" 行末の1文字先までカーソルを移動できるようにする
 set virtualedit=onemore
+
 " ビープ音を可視化
 set visualbell
+
 " ステータスラインを常に表示
 set laststatus=2
-" コマンドラインの補完
-set wildmode=list:longest
+
+" 折り返ししない
+"set nowrap
 
 " 全角幅で表示する
-if has("multi_byte")
+if has('multi_byte')
     set ambiwidth=double
 endif
 
-" 折り返ししない
-set nowrap
+" 背景色
+set background=dark
+colorscheme slate
 
-" Tab系
-" 不可視文字を可視化(タブが「?-」と表示される)
+" ------------------------------------------------------------
+" 不可視文字
+" ------------------------------------------------------------
+
+" 不可視文字を可視化
 set list
 set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%
 
-" カーソル系
+
+" ------------------------------------------------------------
+" カーソル・編集
+" ------------------------------------------------------------
+
+" カーソル移動を行をまたいで可能にする
 set whichwrap=b,s,[,],<,>
 
-" バックスペースを、空白、行末、行頭でも使えるようにする
+" バックスペースを空白・行末・行頭でも使えるようにする
 set backspace=indent,eol,start
 
-" 検索系
-" 検索文字列が小文字の場合は大文字小文字を区別なく検索する
-set ignorecase
-" 検索文字列に大文字が含まれている場合は区別して検索する
-set smartcase
-" 検索文字列入力時に順次対象文字列にヒットさせる
-set incsearch
-" 検索時に最後まで行ったら最初に戻る
-set wrapscan
-" 検索語をハイライト表示
-set hlsearch
-" ESC連打でハイライト解除
-nmap <Esc><Esc> :nohlsearch<CR><Esc>
-
-" ペーストモードの切り替え$
-set pastetoggle=<F2>
+" 括弧入力時に対応する括弧を表示
+set showmatch
+set matchtime=1
 
 " ヤンク／プット時にクリップボードを使用する
 set clipboard+=unnamed
 
+" ペーストモードの切り替え
+set pastetoggle=
+
+
+" ------------------------------------------------------------
+" コマンドライン
+" ------------------------------------------------------------
+
+" 入力中のコマンドをステータスに表示
+set showcmd
+
 " コマンドライン補完
+set wildmode=list:longest
 set wildmenu
+
+
+" ------------------------------------------------------------
+" 検索
+" ------------------------------------------------------------
+
+" 小文字だけなら大文字小文字を区別しない
+set ignorecase
+
+" 大文字を含む場合は大文字小文字を区別する
+set smartcase
+
+" 検索文字列入力時に順次対象文字列にヒットさせる
+set incsearch
+
+" 最後まで検索したら最初に戻る
+set wrapscan
+
+" 検索語をハイライト表示
+set hlsearch
+
+" ESC連打でハイライト解除
+nmap <Esc><Esc> :nohlsearch<CR>
+
+
+" ------------------------------------------------------------
+" ステータスライン
+" ------------------------------------------------------------
 
 set statusline=%F
 set statusline+=%m
@@ -103,248 +156,215 @@ set statusline+=%r
 set statusline+=%=
 set statusline+=[%l/%L]
 set statusline+=[%c]
-set statusline+=[%{(&fenc!=''?&fenc:$enc).':'.&ff}]
+set statusline+=[%{(&fenc!=''?&fenc:&enc).':'.&ff}]
 
-set background=dark
 
-" ファイル拡張子別 キーボードショートカット
-filetype on
+" ============================================================
+" ファイルタイプ
+" ============================================================
+
 filetype plugin indent on
+syntax on
 
-" Filetypeが決まらない場合はtextにする"
-function! s:NoneFileTypeSet()
-  if len(&filetype) == 0
-    set filetype=text
-  endif
-  if len(&fileencoding) == 0
-    if has ('unix')
-      set fileencoding=utf-8
-    else
-      set fileencoding=cp932
+
+" ------------------------------------------------------------
+" ファイルタイプ・新規ファイルのデフォルト設定
+" ------------------------------------------------------------
+
+function! s:SetDefaultFileSettings() abort
+    " ファイルタイプが決まらない場合はtextにする
+    if len(&filetype) == 0
+        set filetype=text
     endif
-  endif
+
+    " 新規ファイルの保存文字コード
+    if len(&fileencoding) == 0
+        if has('unix')
+            set fileencoding=utf-8
+        else
+            set fileencoding=cp932
+        endif
+    endif
 endfunction
-autocmd BufEnter * call s:NoneFileTypeSet()
 
-"[text] -----------------------------------------
-augroup text
-  autocmd!
-  " 引用コメント化
-  autocmd FileType text vmap <S-k> :s/\v^(.*)$/> \1/<Enter>::nohlsearch<Enter>
+autocmd BufEnter * call s:SetDefaultFileSettings()
 
-  " 引用アンコメント化
-  autocmd FileType text vmap <S-l> :s/\v^> (.*)$/\1/g<Enter>::nohlsearch<Enter>
-  autocmd FileType text inoremap { {}<LEFT>
-  autocmd FileType text inoremap [ []<LEFT>
-  autocmd FileType text inoremap ( ()<LEFT>
-  autocmd FileType text inoremap " ""<LEFT>
-  autocmd FileType text inoremap ' ''<LEFT>
-  autocmd FileType text inoremap < <><LEFT>
 
-  " TAB文字を見た目上何文字で表示するか
-  autocmd FileType text setlocal tabstop=4
+" ------------------------------------------------------------
+" コメント化・アンコメント化
+" ------------------------------------------------------------
 
-  " 自動インデントでのインデントの長さ
-  autocmd FileType text setlocal shiftwidth=4
+function! s:ToggleComment(comment) range
+    let comment = escape(a:comment, '\')
+    let all_commented = 1
 
-  " TABキー押下時に挿入するスペースの数
-  " (設定'tabstop'に合わせる)
-  autocmd FileType text setlocal softtabstop=0
+    for lnum in range(a:firstline, a:lastline)
+        if getline(lnum) !~# '^\s*' . comment . '\s'
+            let all_commented = 0
+            break
+        endif
+    endfor
+
+    if all_commented
+        " 全行がコメントならアンコメント
+        execute a:firstline . ',' . a:lastline
+                    \ . 's/^\(\s*\)' . comment . '\s\?/\1/'
+    else
+        " それ以外はコメント
+        execute a:firstline . ',' . a:lastline
+                    \ . 's/^\(\s*\)/\1' . a:comment . ' /'
+    endif
+endfunction
+
+
+" ============================================================
+" text
+" ============================================================
+
+augroup filetype_text
+    autocmd!
+
+    " 引用コメント化・引用アンコメント化
+    autocmd FileType text xnoremap <buffer> <silent> <C-_> :<C-U>call <SID>ToggleComment('>')<CR>
+
+    " インデント
+    autocmd FileType text setlocal tabstop=4 shiftwidth=4 softtabstop=0
 augroup END
 
-"[vim] -----------------------------------------
-augroup vimfile
-  autocmd!
-  autocmd FileType vim setlocal smartindent shiftwidth=2 tabstop=2 softtabstop=0
 
-  "保存時、行末スペースを削除する
-  autocmd BufWritePre *.vimrc,*.gvimrc :%s/\s\+$//ge
+" ============================================================
+" Vim
+" ============================================================
 
-  " コメント化
-  autocmd FileType vim vmap <S-k> :s/\v^(.*)$/" \1/<Enter>::nohlsearch<Enter>
+augroup filetype_vim
+    autocmd!
 
-  " アンコメント化
-  autocmd FileType vim vmap <S-l> :s/\v^" (.*)$/\1/g<Enter>::nohlsearch<Enter>
-  autocmd FileType vim inoremap { {}<LEFT>
-  autocmd FileType vim inoremap [ []<LEFT>
-  autocmd FileType vim inoremap ( ()<LEFT>
-  autocmd FileType vim inoremap " ""<LEFT>
-  autocmd FileType vim inoremap ' ''<LEFT>
+    " インデント
+    autocmd FileType vim setlocal smartindent shiftwidth=2 tabstop=2 softtabstop=0
 
-  "TAB文字をスペースにする
-  autocmd FileType vim setlocal expandtab
+    " 保存時、行末スペースを削除
+    autocmd BufWritePre *.vimrc,*.gvimrc :%s/\s\+$//ge
 
-  "構文ハイライトを有効にする
-  autocmd FileType vim syntax on
+    " コメント化・アンコメント化
+    autocmd FileType vim xnoremap <buffer> <silent> <C-_> :<C-U>call <SID>ToggleComment('"')<CR>
 
-  " 括弧入力時の対応する括弧を表示
-  set showmatch
-  set matchtime=1
+    " TAB文字をスペースにする
+    autocmd FileType vim setlocal expandtab
+augroup END
+
+
+" ============================================================
+" SQL
+" ============================================================
+
+augroup filetype_sql
+    autocmd!
+
+    " インデント
+    autocmd FileType sql setlocal smartindent shiftwidth=4 tabstop=4 softtabstop=0
+
+    " 保存時、行末スペースを削除
+    autocmd BufWritePre *.sql :%s/\s\+$//ge
+
+    " コメント化・アンコメント化
+    autocmd FileType sql xnoremap <buffer> <silent> <C-_> :<C-U>call <SID>ToggleComment('--')<CR>
+augroup END
+
+
+" ============================================================
+" C / C++
+" ============================================================
+
+augroup filetype_cpp
+    autocmd!
+
+    " インデント
+    autocmd FileType c,cpp setlocal cindent shiftwidth=4 tabstop=4 softtabstop=0
+
+    " 保存時、行末スペースを削除
+    autocmd BufWritePre *.c,*.cpp,*.h :%s/\s\+$//ge
+
+    " termdebugプラグインを読み込む
+    autocmd FileType c,cpp packadd termdebug
+
+    " マウスを有効にする
+    autocmd FileType c,cpp setlocal mouse=a
+
+    " ソースファイル全体を整形する
+    autocmd FileType c,cpp noremap <buffer> <F7> :%!clang-format --style Microsoft<CR>
+
+    " 選択した行を整形する
+    autocmd FileType c,cpp vnoremap <buffer> <F7> :!clang-format --style Microsoft<CR>
+
+    " コメント化・アンコメント化
+    autocmd FileType c,cpp xnoremap <buffer> <silent> <C-_> :<C-U>call <SID>ToggleComment('//')<CR>
+augroup END
+
+
+" ============================================================
+" Python
+" ============================================================
+
+augroup filetype_python
+    autocmd!
+
+    " 自動インデント
+    autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class
+
+    " インデント
+    autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=0 expandtab
+
+    " 保存時、行末スペースを削除
+    autocmd BufWritePre *.py :%s/\s\+$//ge
+
+    " ソースファイル全体を整形する with black
+    autocmd FileType python noremap <buffer> <F7> :%!black -q -<CR>
+
+    " 選択した範囲を整形する with black
+    autocmd FileType python vnoremap <buffer> <F7> :!black -q -<CR>
+
+    " コメント化・アンコメント化
+    autocmd FileType python xnoremap <buffer> <silent> <C-_> :<C-U>call <SID>ToggleComment('#')<CR>
+augroup END
+
+
+" ============================================================
+" YAML
+" ============================================================
+
+augroup filetype_yaml
+    autocmd!
+
+    " 自動インデント
+    autocmd FileType yaml setlocal smartindent
+    autocmd FileType yaml setlocal cinwords={,[,:
+
+    " インデント
+    autocmd FileType yaml setlocal tabstop=2 shiftwidth=2 softtabstop=0 expandtab
+
+    " 保存時、行末スペースを削除
+    autocmd BufWritePre *.yaml :%s/\s\+$//ge
 
 augroup END
-"-----------------------------------------
-"[SQL] -----------------------------------------
-augroup sqlfile
-  autocmd!
-  autocmd FileType sql setlocal smartindent shiftwidth=4 tabstop=4 softtabstop=0
 
-  "保存時、行末スペースを削除する
-  autocmd BufWritePre *.sql :%s/\s\+$//ge
 
-  " コメント化
-  autocmd FileType sql vmap <S-k> :s/\v^(.*)$/-- \1/<Enter>::nohlsearch<Enter>
+" ============================================================
+" VB / VBS
+" ============================================================
 
-  " アンコメント化
-  autocmd FileType sql vmap <S-l> :s/\v^-- (.*)$/\1/g<Enter>::nohlsearch<Enter>
-  autocmd FileType sql inoremap { {}<LEFT>
-  autocmd FileType sql inoremap [ []<LEFT>
-  autocmd FileType sql inoremap ( ()<LEFT>
-  autocmd FileType sql inoremap " ""<LEFT>
-  autocmd FileType sql inoremap ' ''<LEFT>
+augroup filetype_vb
+    autocmd!
 
-  "構文ハイライトを有効にする
-  autocmd FileType sql syntax on
+    " 自動インデント
+    autocmd FileType vb setlocal smartindent
 
-  " 括弧入力時の対応する括弧を表示
-  set showmatch
-  set matchtime=1
+    " インデント
+    autocmd FileType vb setlocal tabstop=2 shiftwidth=2 softtabstop=0
 
+    " コメント化・アンコメント化
+    autocmd FileType vb xnoremap <buffer> <silent> <C-_> :<C-U>call <SID>ToggleComment("'")<CR>
+
+    " 保存時、行末スペースを削除
+    autocmd BufWritePre *.vbs,*.vb :%s/\s\+$//ge
 augroup END
-"-----------------------------------------
 
-"[C/C++] -----------------------------------------
-augroup cppfile
-  autocmd!
-  autocmd FileType c,cpp setlocal cindent shiftwidth=4 tabstop=4 softtabstop=0
-
-  "保存時、行末スペースを削除する
-  autocmd BufWritePre *.c,*.cpp,*.h :%s/\s\+$//ge
-
-  " termdebugプラグインを読み込む
-  autocmd FileType c,cpp packadd termdebug
-  autocmd FileType c,cpp setlocal mouse=a
-
-  "[ノーマルモード]
-  "ソースファイル全体を整形する with clang-format
-  autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
-
-  "[ビジュアルモード]
-  "選択した行を整形する with clang-format
-  autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
-
-  " コメント化
-  autocmd FileType c,cpp vmap <S-k> :s/\v^(.*)$/\/\/ \1/<Enter>::nohlsearch<Enter>
-
-  " アンコメント化
-  autocmd FileType c,cpp vmap <S-l> :s/\v^\/\/ (.*)$/\1/g<Enter>::nohlsearch<Enter>
-  autocmd FileType c,cpp inoremap { {}<LEFT>
-  autocmd FileType c,cpp inoremap [ []<LEFT>
-  autocmd FileType c,cpp inoremap ( ()<LEFT>
-  autocmd FileType c,cpp inoremap " ""<LEFT>
-  autocmd FileType c,cpp inoremap ' ''<LEFT>
-
-  "構文ハイライトを有効にする
-  autocmd FileType c,cpp syntax on
-  " 括弧入力時の対応する括弧を表示
-  set showmatch
-  set matchtime=1
-
-augroup END
-"-----------------------------------------
-
-"[Python] -----------------------------------------
-augroup pythonfile
-  autocmd!
-  autocmd FileType python setlocal smartindent
-  autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class
-  autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=0
-
-  "TAB文字をスペースにする
-  autocmd FileType python setlocal expandtab
-
-  "保存時、行末スペースを削除する
-  autocmd BufWritePre *.py :%s/\s\+$//ge
-
-  "[ノーマルモード]
-  "ソースファイル全体を整形する with black (pip install black)
-  autocmd FileType python noremap <C-f> :%!black -q -<Enter>
-
-  "[ビジュアルモード]
-  "選択した行を整形する
-  autocmd FileType python vmap <S-f> :%!black -q -<Enter>
-
-  " コメント化
-  autocmd FileType python vmap <S-k> :s/\v^(.+)$/# \1/<Enter>::nohlsearch<Enter>
-
-  " アンコメント化
-  autocmd FileType python vmap <S-l> :s/\v^\# (.+)$/\1/g<Enter>::nohlsearch<Enter>
-  autocmd FileType python inoremap { {}<LEFT>
-  autocmd FileType python inoremap [ []<LEFT>
-  autocmd FileType python inoremap ( ()<LEFT>
-  autocmd FileType python inoremap " ""<LEFT>
-  autocmd FileType python inoremap ' ''<LEFT>
-
-  "構文ハイライトを有効にする
-  autocmd FileType python syntax on
-  " 括弧入力時の対応する括弧を表示
-  set showmatch
-  set matchtime=1
-
-augroup END
-"-----------------------------------------
-
-"[YAML] -----------------------------------------
-augroup yamlfile
-  autocmd!
-  autocmd FileType yaml setlocal smartindent
-  autocmd FileType yaml setlocal cinwords={,[,:
-  autocmd FileType yaml setlocal tabstop=2 shiftwidth=2 softtabstop=0
-
-  autocmd FileType yaml inoremap { {}<LEFT>
-  autocmd FileType yaml inoremap [ []<LEFT>
-  autocmd FileType yaml inoremap ( ()<LEFT>
-  autocmd FileType yaml inoremap " ""<LEFT>
-  autocmd FileType yaml inoremap ' ''<LEFT>
-
-  "TAB文字をスペースにする
-  autocmd FileType yaml setlocal expandtab
-
-  "保存時、行末スペースを削除する
-  autocmd BufWritePre *.yaml :%s/\s\+$//ge
-
-  " 括弧入力時の対応する括弧を表示
-  set showmatch
-  set matchtime=1
-
-augroup END
-"-----------------------------------------
-
-"[VBS/VB] -----------------------------------------
-augroup vbfile
-  autocmd!
-  autocmd FileType vb setlocal smartindent
-  autocmd FileType vb setlocal tabstop=2 shiftwidth=2 softtabstop=0
-
-  " コメント化
-  autocmd FileType vb vmap <S-k> :s/\v^(.+)$/' \1/<Enter>::nohlsearch<Enter>
-
-  " アンコメント化
-  autocmd FileType vb vmap <S-l> :s/\v^\' (.+)$/\1/g<Enter>::nohlsearch<Enter>
-  autocmd FileType vb inoremap { {}<LEFT>
-  autocmd FileType vb inoremap [ []<LEFT>
-  autocmd FileType vb inoremap ( ()<LEFT>
-  autocmd FileType vb inoremap " ""<LEFT>
-  autocmd FileType vb inoremap ' ''<LEFT>
-
-  "保存時、行末スペースを削除する
-  autocmd BufWritePre *.vbs,*.vb :%s/\s\+$//ge
-
-  "構文ハイライトを有効にする
-  autocmd FileType vb syntax on
-
-  " 括弧入力時の対応する括弧を表示
-  set showmatch
-  set matchtime=1
-
-augroup END
-"-----------------------------------------
