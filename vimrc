@@ -1,6 +1,6 @@
 "
 " ============================================================
-" Vim 基本設定
+" Vim 設定
 " ============================================================
 
 " ------------------------------------------------------------
@@ -19,9 +19,7 @@ else
 endif
 
 " vi互換にしない
-if &compatible
-    set nocompatible
-endif
+set nocompatible
 
 
 " ------------------------------------------------------------
@@ -123,9 +121,10 @@ set pastetoggle=
 set showcmd
 
 " コマンドライン補完
-set wildmode=list:longest
-set wildmenu
+set wildmode=longest:list
 
+" 大文字・小文字を区別せずにファイル名を検索・補完する
+set wildignorecase
 
 " ------------------------------------------------------------
 " 検索
@@ -148,6 +147,24 @@ set hlsearch
 
 " ESC連打でハイライト解除
 nmap <Esc><Esc> :nohlsearch<CR>
+
+
+" ------------------------------------------------------------
+" バッファ一覧表示
+" ------------------------------------------------------------
+
+" パターン1. Ctrl + b で開いているファイル（バッファ）一覧をポップアップ表示
+nnoremap <silent> <C-b> :call popup_menu(
+\ map(filter(range(1, bufnr('$')), 'buflisted(v:val)'),
+\ 'printf("%2d: %s", v:val, bufname(v:val) == "" ? "[No Name]" : bufname(v:val))'),
+\ #{callback: {id, result -> result > 0 ? execute('b ' . matchstr(map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'v:val')[result-1], '\d\+')) : ''},
+\   title: ' Buffers ', border: [], highlight: 'Normal', cursorline: 1})<CR>
+
+" パターン2. wildmenu プラグインを使う"
+set wildmenu
+
+" SPACE + b でwildmenuを起動する(:b (スペース) <TAB補完>)
+nnoremap <Space>b :b <Tab>
 
 " ------------------------------------------------------------
 " Terminal設定
@@ -242,13 +259,110 @@ endif
 " ステータスライン
 " ------------------------------------------------------------
 
+" カーソル位置のバイト列を16進数で返す関数
+function! g:GetRawByteHex()
+    let l:line_str = getline('.')
+    let l:idx = col('.') - 1
+    let l:fenc = &fileencoding != '' ? &fileencoding : &encoding
+
+    " 1. 行末（改行位置）のハンドリング
+    if l:idx >= len(l:line_str)
+        if l:fenc =~? 'utf-16le'
+            return '[RawHex: 0x0A 0x00]'
+        elseif l:fenc =~? 'utf-16be'
+            return '[RawHex: 0x00 0x0A]'
+        endif
+        return '[RawHex: 0x0A]'
+    endif
+
+    " 2. 型エラー(E1211)対策：リストや配列を一切使わず、文字列からダイレクトに1バイトを数値化
+    " strpart() で1バイトを切り出し、char2nr() で 0〜255 の数値に変えるだけの原始的な方法です
+    let l:current_byte = char2nr(strpart(l:line_str, l:idx, 1))
+
+    " 3. 各文字コードに応じた「何バイト構成か（1〜4）」の判定
+    let l:char_len = 1
+
+    if l:fenc =~? 'cp932' || l:fenc =~? 'sjis'
+        " CP932(Shift_JIS)の2バイト文字判定
+        if (l:current_byte >= 0x81 && l:current_byte <= 0x9F) || (l:current_byte >= 0xE0 && l:current_byte <= 0xFC)
+            let l:char_len = 2
+        endif
+    elseif l:fenc =~? 'utf-16'
+        " UTF-16判定（基本2バイト、サロゲートペアなら4バイト）
+        let l:char_len = 2
+        if l:fenc =~? 'utf-16le'
+            if l:idx + 1 < len(l:line_str)
+                let l:next_byte = char2nr(strpart(l:line_str, l:idx + 1, 1))
+                if l:next_byte >= 0xD8 && l:next_byte <= 0xDB
+                    let l:char_len = 4
+                endif
+            endif
+        else
+            if l:current_byte >= 0xD8 && l:current_byte <= 0xDB
+                let l:char_len = 4
+            endif
+        endif
+    else
+        " UTF-8判定（文字として認識できない無効バイナリなら、条件通り1バイトのみとして隔離する）
+        if l:current_byte >= 0x80 && l:current_byte <= 0xC1 || l:current_byte >= 0xF5
+            let l:char_len = 1
+        elseif l:current_byte >= 0xC2 && l:current_byte <= 0xDF
+            let l:char_len = 2
+        elseif l:current_byte >= 0xE0 && l:current_byte <= 0xEF
+            let l:char_len = 3
+        elseif l:current_byte >= 0xF0 && l:current_byte <= 0xF4
+            let l:char_len = 4
+        endif
+    endif
+
+    " 4. 16進数文字列の組み立て
+    " join() などの配列操作関数も使わず、ただの文字列結合（.）のみで行います
+    let l:result_str = ''
+    let l:limit = min([l:char_len, 4])
+    let l:i = 0
+
+    while l:i < l:limit
+        if (l:idx + l:i) < len(l:line_str)
+            let l:b = char2nr(strpart(l:line_str, l:idx + l:i, 1))
+            if l:i > 0
+                let l:result_str = l:result_str . ' '
+            endif
+            let l:result_str = l:result_str . printf('0x%02X', l:b)
+        endif
+        let l:i += 1
+    endwhile
+
+    return '[RawHex: ' . l:result_str . ']'
+endfunction
+
 set statusline=%F
 set statusline+=%m
 set statusline+=%r
 set statusline+=%=
+
+" RawHex 表示
+set statusline+=%{GetRawByteHex()}
 set statusline+=[%l/%L]
 set statusline+=[%c]
-set statusline+=[%{(&fenc!=''?&fenc:&enc).':'.&ff}]
+set statusline+=[%{(&fenc!=''?&fenc:&enc).':'.&ff.(&bomb?'\(BOM\)':'')}]
+
+
+" ============================================================
+" インデント
+" ============================================================
+
+" ビジュアルモードで連続してインデント・インデント戻しができるようにする
+" ビジュアルモードで選択後、'>'あるいは'<' を押す
+vnoremap < <gv
+vnoremap > >gv
+
+" インサートモードで行う（文字を入力中）
+" CTRL + t：入力中の行を1段インデントする
+" CTRL + d：入力中の行を1段戻す
+
+" '='コマンドでインデントを自動整形する
+" "=="：カーソル行を正しいインデント位置に直す
+" "gg=G"：ファイル全体を丸ごと整形する(ファイルの先頭＋自動整形コマンド＋ファイルの末尾まで)
 
 
 " ============================================================
@@ -307,6 +421,7 @@ function! ToggleComment(comment) range
                     \ . 's/^\(\s*\)/\1' . a:comment . ' /'
     endif
 endfunction
+
 
 
 " ============================================================
@@ -373,10 +488,10 @@ augroup filetype_cpp
     " インデント
     autocmd FileType c,cpp setlocal cindent shiftwidth=4 tabstop=4 softtabstop=0
 
-    " コメント引用
+    " コメント
     autocmd FileType text vmap <S-k> :s/\v^(.*)$/> \1/<Enter>::nohlsearch<Enter>
 
-    " アンコメント引用
+    " アンコメント
     autocmd FileType text vmap <S-l> :s/\v^> (.*)$/\1/g<Enter>::nohlsearch<Enter>
 
     " 保存時、行末スペースを削除
