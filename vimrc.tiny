@@ -1,6 +1,6 @@
 "
 " ============================================================
-" Vim 基本設定(tiny版)
+" Vim 設定(tiny版)
 " ============================================================
 
 " ------------------------------------------------------------
@@ -26,11 +26,12 @@ set nocompatible
 " ファイル・バッファ
 " ------------------------------------------------------------
 
-" バックアップファイルを作成しない
+" 保存時のみ元ファイルバックアップを作成する機能を無効化
 set nobackup
 
-" バックアップファイルの出力先
-" set backupdir=.
+" 正常終了（保存完了）後にバックアップファイルを削除する
+" 保存時のみ元ファイルバックアップを作成し、保存成功後バックアップを削除する
+set writebackup
 
 " スワップファイルを作成する
 set swapfile
@@ -57,8 +58,6 @@ set number
 
 set ruler
 
-set showcmd
-
 " 現在の行を強調表示
 set cursorline
 
@@ -84,7 +83,7 @@ endif
 
 " 背景色
 set background=dark
-"colorscheme slate
+
 
 " ------------------------------------------------------------
 " 不可視文字
@@ -124,9 +123,10 @@ set pastetoggle=
 set showcmd
 
 " コマンドライン補完
-set wildmode=list:longest
-set wildmenu
+set wildmode=longest:list
 
+" 大文字・小文字を区別せずにファイル名を検索・補完する
+set wildignorecase
 
 " ------------------------------------------------------------
 " 検索
@@ -150,15 +150,35 @@ set hlsearch
 " ESC連打でハイライト解除
 nmap <Esc><Esc> :nohlsearch<CR>
 
+
 " ------------------------------------------------------------
-" ステータスライン
+" バッファ一覧表示
 " ------------------------------------------------------------
 
-set statusline=%F
-set statusline+=%m
-set statusline+=%r
-set statusline+=%=
-set statusline+=[%l/%L]
-set statusline+=[%c]
-set statusline+=[%{(&fenc!=''?&fenc:&enc).':'.&ff}]
+" パターン1. Ctrl + b で開いているファイル（バッファ）一覧をポップアップ表示
+nnoremap <silent> <C-b> :call popup_menu(
+\ map(filter(range(1, bufnr('$')), 'buflisted(v:val)'),
+\ 'printf("%2d: %s", v:val, bufname(v:val) == "" ? "[No Name]" : bufname(v:val))'),
+\ #{callback: {id, result -> result > 0 ? execute('b ' . matchstr(map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'v:val')[result-1], '\d\+')) : ''},
+\   title: ' Buffers ', border: [], highlight: 'Normal', cursorline: 1})<CR>
+
+" パターン2. wildmenu プラグインを使う"
+set wildmenu
+
+" SPACE + b でwildmenuを起動する(:b (スペース) <TAB補完>)
+nnoremap <Space>b :b <Tab>
+
+
+" ============================================================
+" インデント
+" ============================================================
+
+" ビジュアルモードで連続してインデント・インデント戻しができるようにする
+" ビジュアルモードで選択後、'>'あるいは'<' を押す
+vnoremap < <gv
+vnoremap > >gv
+
+" インサートモードで行う（文字を入力中）
+" CTRL + t：入力中の行を1段インデントする
+" CTRL + d：入力中の行を1段戻す
 
