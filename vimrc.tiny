@@ -13,9 +13,9 @@ scriptencoding utf-8
 set fileencodings=ucs-bom,utf-8,cp932,utf-16le
 
 if has('unix')
-    set fileformats=unix,dos,mac
+  set fileformats=unix,dos,mac
 else
-    set fileformats=dos,unix,mac
+  set fileformats=dos,unix,mac
 endif
 
 " vi互換にしない
@@ -78,7 +78,7 @@ set laststatus=2
 
 " 全角幅で表示する
 if has('multi_byte')
-    set ambiwidth=double
+  set ambiwidth=double
 endif
 
 " 背景色
@@ -128,6 +128,9 @@ set wildmode=longest:list
 " 大文字・小文字を区別せずにファイル名を検索・補完する
 set wildignorecase
 
+" wildmenu プラグインを使う"
+set wildmenu
+
 " ------------------------------------------------------------
 " 検索
 " ------------------------------------------------------------
@@ -157,13 +160,10 @@ nmap <Esc><Esc> :nohlsearch<CR>
 
 " パターン1. Ctrl + b で開いているファイル（バッファ）一覧をポップアップ表示
 nnoremap <silent> <C-b> :call popup_menu(
-\ map(filter(range(1, bufnr('$')), 'buflisted(v:val)'),
-\ 'printf("%2d: %s", v:val, bufname(v:val) == "" ? "[No Name]" : bufname(v:val))'),
-\ #{callback: {id, result -> result > 0 ? execute('b ' . matchstr(map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'v:val')[result-1], '\d\+')) : ''},
-\   title: ' Buffers ', border: [], highlight: 'Normal', cursorline: 1})<CR>
-
-" パターン2. wildmenu プラグインを使う"
-set wildmenu
+      \ map(filter(range(1, bufnr('$')), 'buflisted(v:val)'),
+      \ 'printf("%2d: %s", v:val, bufname(v:val) == "" ? "[No Name]" : bufname(v:val))'),
+      \ #{callback: {id, result -> result > 0 ? execute('b ' . matchstr(map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'v:val')[result-1], '\d\+')) : ''},
+      \   title: ' Buffers ', border: [], highlight: 'Normal', cursorline: 1})<CR>
 
 " SPACE + b でwildmenuを起動する(:b (スペース) <TAB補完>)
 nnoremap <Space>b :b <Tab>
