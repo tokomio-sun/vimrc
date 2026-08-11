@@ -28,11 +28,12 @@ endif
 " ファイル・バッファ
 " ------------------------------------------------------------
 
-" バックアップファイルを作成しない
+" 保存時のみ元ファイルバックアップを作成する機能を無効化
 set nobackup
 
-" バックアップファイルの出力先
-" set backupdir=.
+" 正常終了（保存完了）後にバックアップファイルを削除する
+" 保存時のみ元ファイルバックアップを作成し、保存成功後バックアップを削除する
+set writebackup
 
 " スワップファイルを作成する
 set swapfile
@@ -149,6 +150,17 @@ set hlsearch
 nmap <Esc><Esc> :nohlsearch<CR>
 
 " ------------------------------------------------------------
+" Terminal設定
+" ------------------------------------------------------------
+
+" スクロールバッファの容量（行数）を指定する
+set termwinscroll=20000
+
+" ターミナルで Esc キー(または、CTRL + [ )を2回押すとノーマルモード（スクロール可能）に切り替える
+" 元に戻すには insert モードにする('i'を入力する)
+tmap <Esc><Esc> <C-W>N
+
+" ------------------------------------------------------------
 " Git Bash ターミナルの起動
 " ------------------------------------------------------------
 
@@ -156,9 +168,9 @@ nmap <Esc><Esc> :nohlsearch<CR>
 if has('win32') || has('win64')
 
   " Git Bash を開く専用コマンド :term_git を定義
-  command! TermGit call Vimrc_OpenGitBash()
+  command! TermGit call s:OpenGitBash()
 
-  function! Vimrc_OpenGitBash() abort
+  function! s:OpenGitBash() abort
     " Git Bash の実行ファイルパス
     let l:bash_path = 'C:/Program Files/Git/bin/bash.exe'
 
@@ -200,9 +212,9 @@ endif
 if has('win32') || has('win64')
 
   " PowerShell 5.1 を開く専用コマンド :term_pwsh を定義
-  command! TermPowerShell call Vimrc_OpenPowerShell51()
+  command! TermPowerShell call s:OpenPowerShell51()
 
-  function! Vimrc_OpenPowerShell51() abort
+  function! s:OpenPowerShell51() abort
     " PowerShell 5.1 の実行ファイルパス
     let l:ps_path = 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe'
 
