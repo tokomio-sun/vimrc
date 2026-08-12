@@ -3,6 +3,9 @@
 " Vim 設定
 " ============================================================
 
+" vi互換にしない
+set nocompatible
+
 " ------------------------------------------------------------
 " 文字コード・改行コード
 " ------------------------------------------------------------
@@ -10,17 +13,13 @@
 scriptencoding utf-8
 
 " ファイルを開く際の文字コード判定順
-set fileencodings=ucs-bom,utf-8,cp932,utf-16le
+set fileencodings=ucs-bom,utf-8,cp932,utf-16le,iso-2022-jp,euc-jp
 
 if has('unix')
-  set fileformats=unix,dos,mac
+    set fileformats=unix,dos,mac
 else
-  set fileformats=dos,unix,mac
+    set fileformats=dos,unix,mac
 endif
-
-" vi互換にしない
-set nocompatible
-
 
 " ------------------------------------------------------------
 " ファイル・バッファ
@@ -56,11 +55,14 @@ autocmd BufLeave * if bufnr('%') == 1 && bufname('%') == '' | setlocal bufhidden
 " 行番号を表示
 set number
 
+" カーソル行からの相対的な行番号を表示する
+set relativenumber
+
 " 現在の行を強調表示
 set cursorline
 
 " 現在の列を強調表示
-" set cursorcolumn
+set cursorcolumn
 
 " 行末の1文字先までカーソルを移動できるようにする
 set virtualedit=onemore
@@ -71,17 +73,30 @@ set visualbell
 " ステータスラインを常に表示
 set laststatus=2
 
-" 折り返ししない
-"set nowrap
+" 折り返しする
+set wrap
+
+" 単語単位で折り返す
+set linebreak
 
 " 全角幅で表示する
 if has('multi_byte')
-  set ambiwidth=double
+    set ambiwidth=double
 endif
+
 
 " 背景色
 set background=dark
-colorscheme slate
+colorscheme industry
+" colorscheme darkblue
+" colorscheme ron
+" colorscheme pablo
+" colorscheme desert
+
+if has('vcon')
+    " ターミナル内で、highlight-guifg と highlight-guibg を使う
+    set termguicolors
+endif 
 
 " ------------------------------------------------------------
 " 不可視文字
@@ -104,13 +119,15 @@ set backspace=indent,eol,start
 
 " 括弧入力時に対応する括弧を表示
 set showmatch
-set matchtime=1
+
+" マッチしている括弧を表示するための時間を0.1秒単位で指定する
+set matchtime=5
 
 " ヤンク／プット時にクリップボードを使用する
 set clipboard+=unnamed
 
 " ペーストモードの切り替え
-set pastetoggle=
+set pastetoggle=<F2>
 
 
 " ------------------------------------------------------------
@@ -120,14 +137,14 @@ set pastetoggle=
 " 入力中のコマンドをステータスに表示
 set showcmd
 
+" wildmenu プラグインを使う"
+set wildmenu
+
 " コマンドライン補完
-set wildmode=longest,list:full
+set wildmode=longest:list,longest:list,longest:list,longest:full
 
 " 大文字・小文字を区別せずにファイル名を検索・補完する
 set wildignorecase
-
-" wildmenu プラグインを使う"
-set wildmenu
 
 " ------------------------------------------------------------
 " 検索
@@ -158,12 +175,13 @@ nmap <Esc><Esc> :nohlsearch<CR>
 
 " パターン1. Ctrl + b で開いているファイル（バッファ）一覧をポップアップ表示
 nnoremap <silent> <C-b> :call popup_menu(
-      \ map(filter(range(1, bufnr('$')), 'buflisted(v:val)'),
-      \ 'printf("%2d: %s", v:val, bufname(v:val) == "" ? "[No Name]" : bufname(v:val))'),
-      \ #{callback: {id, result -> result > 0 ? execute('b ' . matchstr(map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'v:val')[result-1], '\d\+')) : ''},
-      \   title: ' Buffers ', border: [], highlight: 'Normal', cursorline: 1})<CR>
+            \ map(filter(range(1, bufnr('$')), 'buflisted(v:val)'),
+            \ 'printf("%2d: %s", v:val, bufname(v:val) == "" ? "[No Name]" : bufname(v:val))'),
+            \ #{callback: {id, result -> result > 0 ? execute('b ' . matchstr(map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'v:val')[result-1], '\d\+')) : ''},
+            \   title: ' Buffers ', border: [], highlight: 'Normal', cursorline: 1})<CR>
 
-" SPACE + b でwildmenuを起動する(:b (スペース) <TAB補完>)
+" パターン2. SPACE + b でwildmenuを起動する
+" (ノーマルモードで SPACE⇒b)
 nnoremap <Space>b :b <Tab>
 
 " ------------------------------------------------------------
@@ -184,39 +202,39 @@ tmap <Esc><Esc> <C-W>N
 " Windows（32ビットまたは64ビット）環境の場合のみ実行
 if has('win32') || has('win64')
 
-  " Git Bash を開く専用コマンド :term_git を定義
-  command! TermGit call s:OpenGitBash()
+    " Git Bash を開く専用コマンド :term_git を定義
+    command! TermGit call s:OpenGitBash()
 
-  function! s:OpenGitBash() abort
-    " Git Bash の実行ファイルパス
-    let l:bash_path = 'C:/Program Files/Git/bin/bash.exe'
+    function! s:OpenGitBash() abort
+        " Git Bash の実行ファイルパス
+        let l:bash_path = 'C:/Program Files/Git/bin/bash.exe'
 
-    " Git Bash のログインスクリプトによる 'cd ~' (ホームへの移動) をスキップさせる
-    let $CHERE_INVOKING = 1
+        " Git Bash のログインスクリプトによる 'cd ~' (ホームへの移動) をスキップさせる
+        let $CHERE_INVOKING = 1
 
-    " ++dir=... で Vim のカレントディレクトリを明示指定
-    let l:cwd = fnameescape(getcwd())
+        " ++dir=... で Vim のカレントディレクトリを明示指定
+        let l:cwd = fnameescape(getcwd())
 
-    if filereadable(l:bash_path)
-      let l:options = '-i -l'
+        if filereadable(l:bash_path)
+            let l:options = '-i -l'
 
-      " ターミナルで Git Bash をログインシェルとして起動
-      " 1. 画面下に高さ12行の空きウィンドウを作成
-      belowright 12new
+            " ターミナルで Git Bash をログインシェルとして起動
+            " 1. 画面下に高さ12行の空きウィンドウを作成
+            belowright 12new
 
-      " 2. 作成したカレントウィンドウ内でターミナルを起動
-      call term_start([l:bash_path, '-i', '-l'], {
-            \ 'cwd': getcwd(),
-            \ 'term_finish': 'close',
-            \ 'curwin': 1,
-            \ })
-    else
-      echoerr 'Git Bash が見つかりません: ' . l:bash_path
-    endif
-  endfunction
+            " 2. 作成したカレントウィンドウ内でターミナルを起動
+            call term_start([l:bash_path, '-i', '-l'], {
+                        \ 'cwd': getcwd(),
+                        \ 'term_finish': 'close',
+                        \ 'curwin': 1,
+                        \ })
+        else
+            echoerr 'Git Bash が見つかりません: ' . l:bash_path
+        endif
+    endfunction
 
-  " コマンドラインで 'term_git' と打ったら"TermGit"に自動置換して起動
-  cabbrev term_git TermGit
+    " コマンドラインで 'term_git' と打ったら"TermGit"に自動置換して起動
+    cabbrev term_git TermGit
 
 endif
 
@@ -228,30 +246,30 @@ endif
 " Windows（32ビットまたは64ビット）環境の場合のみ実行
 if has('win32') || has('win64')
 
-  " PowerShell 5.1 を開く専用コマンド :term_pwsh を定義
-  command! TermPowerShell call s:OpenPowerShell51()
+    " PowerShell 5.1 を開く専用コマンド :term_pwsh を定義
+    command! TermPowerShell call s:OpenPowerShell51()
 
-  function! s:OpenPowerShell51() abort
-    " PowerShell 5.1 の実行ファイルパス
-    let l:ps_path = 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe'
+    function! s:OpenPowerShell51() abort
+        " PowerShell 5.1 の実行ファイルパス
+        let l:ps_path = 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe'
 
-    if filereadable(l:ps_path)
-      " 1. 画面下に高さ 12 行の新規ウィンドウを作成
-      belowright 12new
+        if filereadable(l:ps_path)
+            " 1. 画面下に高さ 12 行の新規ウィンドウを作成
+            belowright 12new
 
-      " 2. 作成したウィンドウ内で PowerShell を起動（Vimのカレントディレクトリを渡す）
-      call term_start([l:ps_path, '-NoExit', '-ExecutionPolicy', 'Bypass'], {
-            \ 'cwd': getcwd(),
-            \ 'term_finish': 'close',
-            \ 'curwin': 1,
-            \ })
-    else
-      echoerr 'PowerShell 5.1 が見つかりません: ' . l:ps_path
-    endif
-  endfunction
+            " 2. 作成したウィンドウ内で PowerShell を起動（Vimのカレントディレクトリを渡す）
+            call term_start([l:ps_path, '-NoExit', '-ExecutionPolicy', 'Bypass'], {
+                        \ 'cwd': getcwd(),
+                        \ 'term_finish': 'close',
+                        \ 'curwin': 1,
+                        \ })
+        else
+            echoerr 'PowerShell 5.1 が見つかりません: ' . l:ps_path
+        endif
+    endfunction
 
-  " コマンドラインで 'term_git' と打ったら"TermPowerShell"に自動置換して起動
-  cabbrev term_pwsh TermPowerShell
+    " コマンドラインで 'term_git' と打ったら"TermPowerShell"に自動置換して起動
+    cabbrev term_pwsh TermPowerShell
 endif
 
 
@@ -261,89 +279,102 @@ endif
 
 " カーソル位置のバイト列を16進数で返す関数
 function! g:GetRawByteHex()
-  let l:line_str = getline('.')
-  let l:idx = col('.') - 1
-  let l:fenc = &fileencoding != '' ? &fileencoding : &encoding
+    let l:line_str = getline('.')
+    let l:idx = col('.') - 1
+    let l:fenc = &fileencoding != '' ? &fileencoding : &encoding
 
-  " 1. 行末（改行位置）のハンドリング
-  if l:idx >= len(l:line_str)
-    if l:fenc =~? 'utf-16le'
-      return '[RawHex: 0x0A 0x00]'
-    elseif l:fenc =~? 'utf-16be'
-      return '[RawHex: 0x00 0x0A]'
-    endif
-    return '[RawHex: 0x0A]'
-  endif
-
-  " 2. カーソル位置の１バイトを取得する
-  " strpart() で1バイトを切り出し、char2nr() で 0〜255 の数値に変える
-  let l:current_byte = char2nr(strpart(l:line_str, l:idx, 1))
-
-  " 3. 各文字コードに応じた「何バイト構成か（1〜4）」を判定する
-  let l:char_len = 1
-
-  if l:fenc =~? 'cp932' || l:fenc =~? 'sjis'
-    " CP932(Shift_JIS)の2バイト文字判定
-    if (l:current_byte >= 0x81 && l:current_byte <= 0x9F) || (l:current_byte >= 0xE0 && l:current_byte <= 0xFC)
-      let l:char_len = 2
-    endif
-  elseif l:fenc =~? 'utf-16'
-    " UTF-16判定（基本2バイト、サロゲートペアなら4バイト）
-    let l:char_len = 2
-    if l:fenc =~? 'utf-16le'
-      if l:idx + 1 < len(l:line_str)
-        let l:next_byte = char2nr(strpart(l:line_str, l:idx + 1, 1))
-        if l:next_byte >= 0xD8 && l:next_byte <= 0xDB
-          let l:char_len = 4
+    " 1. 行末（改行位置）のハンドリング
+    if l:idx >= len(l:line_str)
+        if l:fenc =~? 'utf-16le'
+            return '[RawHex: 0x0A 0x00]'
+        elseif l:fenc =~? 'utf-16be'
+            return '[RawHex: 0x00 0x0A]'
         endif
-      endif
+        return '[RawHex: 0x0A]'
+    endif
+
+    " 2. カーソル位置の１バイトを取得する
+    " strpart() で1バイトを切り出し、char2nr() で 0〜255 の数値に変える
+    let l:current_byte = char2nr(strpart(l:line_str, l:idx, 1))
+
+    " 3. 各文字コードに応じた「何バイト構成か（1〜4）」を判定する
+    let l:char_len = 1
+
+    if l:fenc =~? 'cp932' || l:fenc =~? 'sjis'
+        " CP932(Shift_JIS)の2バイト文字判定
+        if (l:current_byte >= 0x81 && l:current_byte <= 0x9F) || (l:current_byte >= 0xE0 && l:current_byte <= 0xFC)
+            let l:char_len = 2
+        endif
+    elseif l:fenc =~? 'utf-16'
+        " UTF-16判定（基本2バイト、サロゲートペアなら4バイト）
+        let l:char_len = 2
+        if l:fenc =~? 'utf-16le'
+            if l:idx + 1 < len(l:line_str)
+                let l:next_byte = char2nr(strpart(l:line_str, l:idx + 1, 1))
+                if l:next_byte >= 0xD8 && l:next_byte <= 0xDB
+                    let l:char_len = 4
+                endif
+            endif
+        else
+            if l:current_byte >= 0xD8 && l:current_byte <= 0xDB
+                let l:char_len = 4
+            endif
+        endif
     else
-      if l:current_byte >= 0xD8 && l:current_byte <= 0xDB
-        let l:char_len = 4
-      endif
+        " UTF-8判定（文字として認識できない無効バイナリなら、条件通り1バイトのみとして隔離する）
+        if l:current_byte >= 0x80 && l:current_byte <= 0xC1 || l:current_byte >= 0xF5
+            let l:char_len = 1
+        elseif l:current_byte >= 0xC2 && l:current_byte <= 0xDF
+            let l:char_len = 2
+        elseif l:current_byte >= 0xE0 && l:current_byte <= 0xEF
+            let l:char_len = 3
+        elseif l:current_byte >= 0xF0 && l:current_byte <= 0xF4
+            let l:char_len = 4
+        endif
     endif
-  else
-    " UTF-8判定（文字として認識できない無効バイナリなら、条件通り1バイトのみとして隔離する）
-    if l:current_byte >= 0x80 && l:current_byte <= 0xC1 || l:current_byte >= 0xF5
-      let l:char_len = 1
-    elseif l:current_byte >= 0xC2 && l:current_byte <= 0xDF
-      let l:char_len = 2
-    elseif l:current_byte >= 0xE0 && l:current_byte <= 0xEF
-      let l:char_len = 3
-    elseif l:current_byte >= 0xF0 && l:current_byte <= 0xF4
-      let l:char_len = 4
-    endif
-  endif
 
-  " 4. 16進数文字列の組み立て
-  " join() などの配列操作関数も使わず、ただの文字列結合（.）のみで行います
-  let l:result_str = ''
-  let l:limit = min([l:char_len, 4])
-  let l:i = 0
+    " 4. 16進数文字列の組み立て
+    " join() などの配列操作関数も使わず、ただの文字列結合（.）のみで行います
+    let l:result_str = ''
+    let l:limit = min([l:char_len, 4])
+    let l:i = 0
 
-  while l:i < l:limit
-    if (l:idx + l:i) < len(l:line_str)
-      let l:b = char2nr(strpart(l:line_str, l:idx + l:i, 1))
-      if l:i > 0
-        let l:result_str = l:result_str . ' '
-      endif
-      let l:result_str = l:result_str . printf('0x%02X', l:b)
-    endif
-    let l:i += 1
-  endwhile
+    while l:i < l:limit
+        if (l:idx + l:i) < len(l:line_str)
+            let l:b = char2nr(strpart(l:line_str, l:idx + l:i, 1))
+            if l:i > 0
+                let l:result_str = l:result_str . ' '
+            endif
+            let l:result_str = l:result_str . printf('0x%02X', l:b)
+        endif
+        let l:i += 1
+    endwhile
 
-  return '[RawHex: ' . l:result_str . ']'
+    return '[RawHex: ' . l:result_str . ']'
 endfunction
 
-set statusline=%F
+" バッファ内のファイルのパス(入力された通り、またはカレントディレクトリに対する相対パス)
+set statusline=%f
+
+" 修正フラグ
 set statusline+=%m
+
+" 読み込み専用フラグ
 set statusline+=%r
+
+" セクション区切り
 set statusline+=%=
 
 " RawHex 表示
 set statusline+=%{GetRawByteHex()}
-set statusline+=[%l/%L]
+
+" カーソル行番号と行数
+set statusline+=[%l/%L\ %p%%]
+
+" カーソルの列数
 set statusline+=[%c]
+
+" BOMの有無
 set statusline+=[%{(&fenc!=''?&fenc:&enc).':'.&ff.(&bomb?'\(BOM\)':'')}]
 
 
@@ -379,24 +410,24 @@ syntax on
 " ------------------------------------------------------------
 
 function! s:SetDefaultFileSettings() abort
-  " ファイルタイプが決まらない場合はtextにする
-  if len(&filetype) == 0
-    set filetype=text
-  endif
-
-  " 新規ファイルの保存文字コード
-  if len(&fileencoding) == 0
-    if has('unix')
-      set fileencoding=utf-8
-      set fileformat=unix
-    else
-      set fileencoding=utf-8
-      set fileformat=dos
-
-      " 必要であればBOM付きにする
-      "set bomb
+    " ファイルタイプが決まらない場合はtextにする
+    if len(&filetype) == 0
+        set filetype=text
     endif
-  endif
+
+    " 新規ファイルの保存文字コード
+    if len(&fileencoding) == 0
+        if has('unix')
+            set fileencoding=utf-8
+            set fileformat=unix
+        else
+            set fileencoding=utf-8
+            set fileformat=dos
+
+            " 必要であればBOM付きにする
+            "set bomb
+        endif
+    endif
 endfunction
 
 autocmd BufEnter * call s:SetDefaultFileSettings()
@@ -407,25 +438,25 @@ autocmd BufEnter * call s:SetDefaultFileSettings()
 " ------------------------------------------------------------
 
 function! ToggleComment(comment) range
-  let comment = escape(a:comment, '\')
-  let all_commented = 1
+    let comment = escape(a:comment, '\')
+    let all_commented = 1
 
-  for lnum in range(a:firstline, a:lastline)
-    if getline(lnum) !~# '^\s*' . comment . '\s'
-      let all_commented = 0
-      break
+    for lnum in range(a:firstline, a:lastline)
+        if getline(lnum) !~# '^\s*' . comment . '\s'
+            let all_commented = 0
+            break
+        endif
+    endfor
+
+    if all_commented
+        " 全行がコメントならアンコメント
+        execute a:firstline . ',' . a:lastline
+                    \ . 's/^\(\s*\)' . comment . '\s\?/\1/'
+    else
+        " それ以外はコメント
+        execute a:firstline . ',' . a:lastline
+                    \ . 's/^\(\s*\)/\1' . a:comment . ' /'
     endif
-  endfor
-
-  if all_commented
-    " 全行がコメントならアンコメント
-    execute a:firstline . ',' . a:lastline
-          \ . 's/^\(\s*\)' . comment . '\s\?/\1/'
-  else
-    " それ以外はコメント
-    execute a:firstline . ',' . a:lastline
-          \ . 's/^\(\s*\)/\1' . a:comment . ' /'
-  endif
 endfunction
 
 
@@ -435,13 +466,21 @@ endfunction
 " ============================================================
 
 augroup filetype_text
-  autocmd!
+    autocmd!
 
-  " 引用コメント化・引用アンコメント化
-  autocmd FileType text xnoremap <buffer> <silent> <C-K> :call ToggleComment('>')<CR>
+    " インデント
+    autocmd FileType text setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType text setlocal autoindent
 
-  " インデント
-  autocmd FileType text setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    " 引用文字を入れる
+    autocmd FileType text vmap <C-k> :s/\v^(.*)$/> \1/<Enter>::nohlsearch<Enter>
+
+    " 引用文字を消す
+    autocmd FileType text vmap <C-s> :s/\v^> (.*)$/\1/g<Enter>::nohlsearch<Enter>
+
+    " 括弧入力時に対応する括弧を表示しない
+    set noshowmatch
+
 augroup END
 
 
@@ -450,19 +489,22 @@ augroup END
 " ============================================================
 
 augroup filetype_vim
-  autocmd!
+    autocmd!
 
-  " インデント
-  autocmd FileType vim setlocal smartindent shiftwidth=2 tabstop=2 softtabstop=0
+    " インデント
+    autocmd FileType vim setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType vim setlocal smartindent autoindent
 
-  " 保存時、行末スペースを削除
-  autocmd BufWritePre *.vimrc,*.gvimrc :%s/\s\+$//ge
+    " TAB文字をスペースにする
+    autocmd FileType vim setlocal expandtab
 
-  " コメント化・アンコメント化
-  autocmd FileType vim xnoremap <buffer> <silent> <C-K> :call ToggleComment('"')<CR>
+    " 保存時、行末スペースを削除
+    autocmd BufWritePre *.vimrc,*.gvimrc :%s/\s\+$//ge
 
-  " TAB文字をスペースにする
-  autocmd FileType vim setlocal expandtab
+    " コメント化・アンコメント化
+    autocmd FileType vim xnoremap <buffer> <silent> <C-K> :call ToggleComment('"')<CR>
+
+
 augroup END
 
 
@@ -471,16 +513,17 @@ augroup END
 " ============================================================
 
 augroup filetype_sql
-  autocmd!
+    autocmd!
 
-  " インデント
-  autocmd FileType sql setlocal smartindent shiftwidth=4 tabstop=4 softtabstop=0
+    " インデント
+    autocmd FileType sql setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType sql setlocal smartindent autoindent
 
-  " 保存時、行末スペースを削除
-  autocmd BufWritePre *.sql :%s/\s\+$//ge
+    " 保存時、行末スペースを削除
+    autocmd BufWritePre *.sql :%s/\s\+$//ge
 
-  " コメント化・アンコメント化
-  autocmd FileType sql xnoremap <buffer> <silent> <C-K> :call ToggleComment('--')<CR>
+    " コメント化・アンコメント化
+    autocmd FileType sql xnoremap <buffer> <silent> <C-K> :call ToggleComment('--')<CR>
 augroup END
 
 
@@ -489,34 +532,30 @@ augroup END
 " ============================================================
 
 augroup filetype_cpp
-  autocmd!
+    autocmd!
 
-  " インデント
-  autocmd FileType c,cpp setlocal cindent shiftwidth=4 tabstop=4 softtabstop=0
+    " インデント
+    autocmd FileType c,cpp setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType c,cpp setlocal cindent
 
-  " コメント
-  autocmd FileType text vmap <S-k> :s/\v^(.*)$/> \1/<Enter>::nohlsearch<Enter>
+    " 保存時、行末スペースを削除
+    autocmd BufWritePre *.c,*.cpp,*.h :%s/\s\+$//ge
 
-  " アンコメント
-  autocmd FileType text vmap <S-l> :s/\v^> (.*)$/\1/g<Enter>::nohlsearch<Enter>
+    " コメント化・アンコメント化
+    autocmd FileType c,cpp xnoremap <buffer> <silent> <C-K> :call ToggleComment('//')<CR>
 
-  " 保存時、行末スペースを削除
-  autocmd BufWritePre *.c,*.cpp,*.h :%s/\s\+$//ge
+    " ソースファイル全体を整形する
+    autocmd FileType c,cpp noremap <buffer> <F7> :%!clang-format --style Microsoft<CR>
 
-  " termdebugプラグインを読み込む
-  autocmd FileType c,cpp packadd termdebug
+    " 選択した行を整形する
+    autocmd FileType c,cpp vnoremap <buffer> <F7> :!clang-format --style Microsoft<CR>
 
-  " マウスを有効にする
-  autocmd FileType c,cpp setlocal mouse=a
+    " termdebugプラグインを読み込む
+    autocmd FileType c,cpp packadd termdebug
 
-  " ソースファイル全体を整形する
-  autocmd FileType c,cpp noremap <buffer> <F7> :%!clang-format --style Microsoft<CR>
+    " マウスを有効にする
+    autocmd FileType c,cpp setlocal mouse=a
 
-  " 選択した行を整形する
-  autocmd FileType c,cpp vnoremap <buffer> <F7> :!clang-format --style Microsoft<CR>
-
-  " コメント化・アンコメント化
-  autocmd FileType c,cpp xnoremap <buffer> <silent> <C-K> :call ToggleComment('//')<CR>
 augroup END
 
 
@@ -525,25 +564,29 @@ augroup END
 " ============================================================
 
 augroup filetype_python
-  autocmd!
+    autocmd!
 
-  " 自動インデント
-  autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class
+    " インデント
+    autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType python setlocal smartindent autoindent
 
-  " インデント
-  autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=0 expandtab
+    " TAB文字をスペースにする
+    autocmd FileType python setlocal expandtab
 
-  " 保存時、行末スペースを削除
-  autocmd BufWritePre *.py :%s/\s\+$//ge
+    autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class
 
-  " ソースファイル全体を整形する with black
-  autocmd FileType python noremap <buffer> <F7> :%!black -q -<CR>
+    " 保存時、行末スペースを削除
+    autocmd BufWritePre *.py :%s/\s\+$//ge
 
-  " 選択した範囲を整形する with black
-  autocmd FileType python vnoremap <buffer> <F7> :!black -q -<CR>
+    " コメント化・アンコメント化
+    autocmd FileType python xnoremap <buffer> <silent> <C-K> :call ToggleComment('#')<CR>
 
-  " コメント化・アンコメント化
-  autocmd FileType python xnoremap <buffer> <silent> <C-K> :call ToggleComment('#')<CR>
+    " ソースファイル全体を整形する with black
+    autocmd FileType python noremap <buffer> <F7> :%!black -q -<CR>
+
+    " 選択した範囲を整形する with black
+    autocmd FileType python vnoremap <buffer> <F7> :!black -q -<CR>
+
 augroup END
 
 
@@ -552,17 +595,18 @@ augroup END
 " ============================================================
 
 augroup filetype_yaml
-  autocmd!
+    autocmd!
 
-  " 自動インデント
-  autocmd FileType yaml setlocal smartindent
-  autocmd FileType yaml setlocal cinwords={,[,:
+    " インデント
+    autocmd FileType yaml setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType yaml setlocal smartindent autoindent
 
-  " インデント
-  autocmd FileType yaml setlocal tabstop=2 shiftwidth=2 softtabstop=0 expandtab
+    " TAB文字をスペースにする
+    autocmd FileType yaml setlocal expandtab
+    autocmd FileType yaml setlocal cinwords={,[,:
 
-  " 保存時、行末スペースを削除
-  autocmd BufWritePre *.yaml :%s/\s\+$//ge
+    " 保存時、行末スペースを削除
+    autocmd BufWritePre *.yaml :%s/\s\+$//ge
 
 augroup END
 
@@ -571,41 +615,42 @@ augroup END
 " ============================================================
 
 function! ToggleBatComment() range
-  let all_commented = 1
+    let all_commented = 1
 
-  for lnum in range(a:firstline, a:lastline)
-    if getline(lnum) !~? '^\s*REM\>'
-      let all_commented = 0
-      break
+    for lnum in range(a:firstline, a:lastline)
+        if getline(lnum) !~? '^\s*REM\>'
+            let all_commented = 0
+            break
+        endif
+    endfor
+
+    if all_commented
+        execute a:firstline . ',' . a:lastline
+                    \ . 's/^\(\s*\)REM\>\s\?/\1/'
+    else
+        execute a:firstline . ',' . a:lastline
+                    \ . 's/^\(\s*\)/\1REM /'
     endif
-  endfor
-
-  if all_commented
-    execute a:firstline . ',' . a:lastline
-          \ . 's/^\(\s*\)REM\>\s\?/\1/'
-  else
-    execute a:firstline . ',' . a:lastline
-          \ . 's/^\(\s*\)/\1REM /'
-  endif
 endfunction
 
 augroup filetype_bat
-  autocmd!
+    autocmd!
 
-  " 自動インデント
-  autocmd FileType dosbatch,bat setlocal smartindent
+    " インデント
+    autocmd FileType dosbatch,bat setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType dosbatch,bat setlocal smartindent autoindent
 
-  " インデント
-  autocmd FileType dosbatch,bat setlocal tabstop=2 shiftwidth=2 softtabstop=0
+    " TAB文字をスペースにする
+    autocmd FileType dosbatch,bat setlocal expandtab
 
-  " コメント化・アンコメント化
-  autocmd FileType dosbatch,bat xnoremap <buffer> <silent> <C-K> :call ToggleBatComment()<CR>
+    " コメント化・アンコメント化
+    autocmd FileType dosbatch,bat xnoremap <buffer> <silent> <C-K> :call ToggleBatComment()<CR>
 
-  " 保存時、行末スペースを削除
-  autocmd BufWritePre *.bat,*.cmd :%s/\s\+$//ge
+    " 保存時、行末スペースを削除
+    autocmd BufWritePre *.bat,*.cmd :%s/\s\+$//ge
 
-  " 文字コードを強制する
-  autocmd FileType dosbatch,bat setlocal fileencoding=cp932 fileformat=dos
+    " 文字コードを強制する
+    autocmd FileType dosbatch,bat setlocal fileencoding=cp932 fileformat=dos
 augroup END
 
 " ============================================================
@@ -613,22 +658,20 @@ augroup END
 " ============================================================
 
 augroup filetype_ini
-  autocmd!
+    autocmd!
 
-  " 自動インデント
-  autocmd FileType dosini setlocal smartindent
+    " インデント
+    autocmd FileType dosini setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType dosini setlocal smartindent autoindent
 
-  " インデント
-  autocmd FileType dosini setlocal tabstop=2 shiftwidth=2 softtabstop=0
+    " コメント化・アンコメント化
+    autocmd FileType dosini xnoremap <buffer> <silent> <C-K> :call ToggleComment(';')<CR>
 
-  " コメント化・アンコメント化
-  autocmd FileType dosini xnoremap <buffer> <silent> <C-K> :call ToggleComment(';')<CR>
+    " 保存時、行末スペースを削除
+    autocmd BufWritePre *.ini :%s/\s\+$//ge
 
-  " 保存時、行末スペースを削除
-  autocmd BufWritePre *.ini :%s/\s\+$//ge
-
-  " 文字コードを強制する
-  autocmd FileType dosini setlocal fileencoding=cp932 fileformat=dos
+    " 文字コードを強制する
+    autocmd FileType dosini setlocal fileencoding=cp932 fileformat=dos
 augroup END
 
 
@@ -637,20 +680,18 @@ augroup END
 " ============================================================
 
 augroup filetype_vb
-  autocmd!
+    autocmd!
 
-  " 自動インデント
-  autocmd FileType vb setlocal smartindent
+    " インデント
+    autocmd FileType vb setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType vb setlocal smartindent autoindent
 
-  " インデント
-  autocmd FileType vb setlocal tabstop=2 shiftwidth=2 softtabstop=0
+    " コメント化・アンコメント化
+    autocmd FileType vb xnoremap <buffer> <silent> <C-K> :call ToggleComment("'")<CR>
 
-  " コメント化・アンコメント化
-  autocmd FileType vb xnoremap <buffer> <silent> <C-K> :call ToggleComment("'")<CR>
+    " 保存時、行末スペースを削除
+    autocmd BufWritePre *.vbs,*.vb :%s/\s\+$//ge
 
-  " 保存時、行末スペースを削除
-  autocmd BufWritePre *.vbs,*.vb :%s/\s\+$//ge
-
-  " 文字コードを強制する
-  autocmd FileType dosini setlocal fileencoding=cp932 fileformat=dos
+    " 文字コードを強制する
+    autocmd FileType vb setlocal fileencoding=cp932 fileformat=dos
 augroup END

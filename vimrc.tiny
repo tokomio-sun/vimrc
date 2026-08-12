@@ -3,6 +3,9 @@
 " Vim 設定(tiny版)
 " ============================================================
 
+" vi互換にしない
+set nocompatible
+
 " ------------------------------------------------------------
 " 文字コード・改行コード
 " ------------------------------------------------------------
@@ -10,17 +13,13 @@
 scriptencoding utf-8
 
 " ファイルを開く際の文字コード判定順
-set fileencodings=ucs-bom,utf-8,cp932,utf-16le
+set fileencodings=ucs-bom,utf-8,cp932,utf-16le,iso-2022-jp,euc-jp
 
 if has('unix')
-  set fileformats=unix,dos,mac
+    set fileformats=unix,dos,mac
 else
-  set fileformats=dos,unix,mac
+    set fileformats=dos,unix,mac
 endif
-
-" vi互換にしない
-set nocompatible
-
 
 " ------------------------------------------------------------
 " ファイル・バッファ
@@ -58,11 +57,14 @@ set number
 
 set ruler
 
+" カーソル行からの相対的な行番号を表示する
+set relativenumber
+
 " 現在の行を強調表示
 set cursorline
 
 " 現在の列を強調表示
-" set cursorcolumn
+set cursorcolumn
 
 " 行末の1文字先までカーソルを移動できるようにする
 set virtualedit=onemore
@@ -73,17 +75,30 @@ set visualbell
 " ステータスラインを常に表示
 set laststatus=2
 
-" 折り返ししない
-"set nowrap
+" 折り返しする
+set wrap
+
+" 単語単位で折り返す
+set linebreak
 
 " 全角幅で表示する
 if has('multi_byte')
-  set ambiwidth=double
+    set ambiwidth=double
 endif
+
 
 " 背景色
 set background=dark
+colorscheme industry
+" colorscheme darkblue
+" colorscheme ron
+" colorscheme pablo
+" colorscheme desert
 
+if has('vcon')
+    " ターミナル内で、highlight-guifg と highlight-guibg を使う
+    set termguicolors
+endif 
 
 " ------------------------------------------------------------
 " 不可視文字
@@ -106,13 +121,15 @@ set backspace=indent,eol,start
 
 " 括弧入力時に対応する括弧を表示
 set showmatch
-set matchtime=1
+
+" マッチしている括弧を表示するための時間を0.1秒単位で指定する
+set matchtime=5
 
 " ヤンク／プット時にクリップボードを使用する
 set clipboard+=unnamed
 
 " ペーストモードの切り替え
-set pastetoggle=
+set pastetoggle=<F2>
 
 
 " ------------------------------------------------------------
@@ -122,14 +139,14 @@ set pastetoggle=
 " 入力中のコマンドをステータスに表示
 set showcmd
 
+" wildmenu プラグインを使う"
+set wildmenu
+
 " コマンドライン補完
-set wildmode=longest:list
+set wildmode=longest:list,longest:list,longest:list,longest:full
 
 " 大文字・小文字を区別せずにファイル名を検索・補完する
 set wildignorecase
-
-" wildmenu プラグインを使う"
-set wildmenu
 
 " ------------------------------------------------------------
 " 検索
@@ -160,12 +177,13 @@ nmap <Esc><Esc> :nohlsearch<CR>
 
 " パターン1. Ctrl + b で開いているファイル（バッファ）一覧をポップアップ表示
 nnoremap <silent> <C-b> :call popup_menu(
-      \ map(filter(range(1, bufnr('$')), 'buflisted(v:val)'),
-      \ 'printf("%2d: %s", v:val, bufname(v:val) == "" ? "[No Name]" : bufname(v:val))'),
-      \ #{callback: {id, result -> result > 0 ? execute('b ' . matchstr(map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'v:val')[result-1], '\d\+')) : ''},
-      \   title: ' Buffers ', border: [], highlight: 'Normal', cursorline: 1})<CR>
+            \ map(filter(range(1, bufnr('$')), 'buflisted(v:val)'),
+            \ 'printf("%2d: %s", v:val, bufname(v:val) == "" ? "[No Name]" : bufname(v:val))'),
+            \ #{callback: {id, result -> result > 0 ? execute('b ' . matchstr(map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'v:val')[result-1], '\d\+')) : ''},
+            \   title: ' Buffers ', border: [], highlight: 'Normal', cursorline: 1})<CR>
 
-" SPACE + b でwildmenuを起動する(:b (スペース) <TAB補完>)
+" パターン2. SPACE + b でwildmenuを起動する
+" (ノーマルモードで SPACE⇒b)
 nnoremap <Space>b :b <Tab>
 
 
