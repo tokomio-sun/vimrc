@@ -89,11 +89,6 @@ endif
 
 " 背景色
 set background=dark
-colorscheme industry
-" colorscheme darkblue
-" colorscheme ron
-" colorscheme pablo
-" colorscheme desert
 
 if has('vcon')
     " ターミナル内で、highlight-guifg と highlight-guibg を使う
@@ -175,16 +170,7 @@ nmap <Esc><Esc> :nohlsearch<CR>
 " バッファ一覧表示
 " ------------------------------------------------------------
 
-" パターン1. Ctrl + b で開いているファイル（バッファ）一覧をポップアップ表示
-nnoremap <silent> <C-b> :call popup_menu(
-            \ map(filter(range(1, bufnr('$')), 'buflisted(v:val)'),
-            \ 'printf("%2d: %s", v:val, bufname(v:val) == "" ? "[No Name]" : bufname(v:val))'),
-            \ #{callback: {id, result -> result > 0 ? execute('b ' . matchstr(map(filter(range(1, bufnr('$')), 'buflisted(v:val)'), 'v:val')[result-1], '\d\+')) : ''},
-            \   title: ' Buffers ', border: [], highlight: 'Normal', cursorline: 1})<CR>
-
-" パターン2. SPACE + b でwildmenuを起動する
-" (ノーマルモードで SPACE⇒b)
-nnoremap <Space>b :b <Tab>
+" (ノーマルモードで :b (タブ))
 
 
 " ============================================================
@@ -199,4 +185,9 @@ vnoremap > >gv
 " インサートモードで行う（文字を入力中）
 " CTRL + t：入力中の行を1段インデントする
 " CTRL + d：入力中の行を1段戻す
+
+" インデント
+set tabstop=4
+set shiftwidth=4
+set softtabstop=0
 
