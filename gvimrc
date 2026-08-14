@@ -3,9 +3,11 @@ set columns=120
 set lines=25
 
 if has("gui_running")
+    " コメント：GUIでフォント選択するには set guifont=*
+
     if has("win32") || has("win64")
         set guifont=ＭＳ\ ゴシック:h12::cSHIFTJIS:qDRAFT
-    " set guifont=NOTONOTO_HS:h12::cSHIFTJIS:qDRAFT
+        " set guifont=NOTONOTO_HS:h12::cSHIFTJIS:qDRAFT
 
     elseif has("unix")
         set guifont=Monospace\ 12

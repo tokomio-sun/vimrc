@@ -95,13 +95,14 @@ if has('vcon')
     set termguicolors
 endif 
 
+
 " ------------------------------------------------------------
 " 不可視文字
 " ------------------------------------------------------------
 
 " 不可視文字を可視化
 set list
-set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%
+set listchars=tab:»-,trail:-,eol:\\uffe9,extends:»,precedes:«
 
 
 " ------------------------------------------------------------
@@ -125,6 +126,16 @@ set clipboard+=unnamed
 
 " ペーストモードの切り替え
 set pastetoggle=<F2>
+
+if has("multi_byte_ime") || has("xim")
+    " コメント:IMEのショートカット：CTRL + ^
+
+    " 次挿入モードに入るとき、IME を OFF にする
+    set iminsert=0
+
+    " 次検索モードに入るとき、IME を OFF にする(iminsertの設定を参照する)
+    set imsearch=-1
+endif
 
 
 " ------------------------------------------------------------

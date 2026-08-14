@@ -367,21 +367,41 @@ endfunction
 " IME状態表示
 if has("multi_byte_ime") || has("xim")
 
-    " IME の状態を取得してステータスライン用変数を更新する関数
-    function! MyImStatusFunc()
-        " &iminsert の値に基づいて描画を更新
-        redrawstatus
-        return &iminsert
-    endfunction
+    if has("win32") || has("win64")
+        " IME の状態を取得してステータスライン用変数を更新する関数
+        function! MyImStatusFunc()
+            " &iminsert の値に基づいて描画を更新
+            redrawstatus
+            return &iminsert
+        endfunction
 
-    " VimのIME状態取得処理に自作関数をフックする
-    set imstatusfunc=MyImStatusFunc
+        " VimのIME状態取得処理に自作関数をフックする
+        set imstatusfunc=MyImStatusFunc
 
-    function! MyImStatus()
-        return (&iminsert == 1 || &iminsert == 2) ? '[IME:ON]' : ''
-    endfunction
+        function! MyImStatus()
+            return (&iminsert == 1 || &iminsert == 2) ? '[IME:ON]' : ''
+        endfunction
+
+    else
+        " CTRL + ^ の入力をS-spaceに置き換える
+        set imactivatekey=S-space
+
+        " ステータスライン表示用関数
+        function! MyImStatus()
+            return (&iminsert == 1 || &iminsert == 2) ? '[IME:ON]' : ''
+        endfunction
+
+        " --- IME状態が変化した時にステータスラインを即時再描画する autocmd ---
+        augroup ImStatusSync
+            autocmd!
+            " iminsert の値が変わった時にステータスラインを更新
+            autocmd OptionSet iminsert redrawstatus
+            " 挿入モードを抜けた時は表示をクリアするために再描画
+            autocmd InsertLeave * redrawstatus
+        augroup END
+
+    endif
 endif
-
 
 " バッファ内のファイルのパス(入力された通り、またはカレントディレクトリに対する相対パス)
 set statusline=%f
