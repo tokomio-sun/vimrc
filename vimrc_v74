@@ -1,353 +1,534 @@
-" Vim Setting
+"
+" ============================================================
+" Vim İ’è
+" ============================================================
 
-set encoding=utf-8
+" viŒİŠ·‚É‚µ‚È‚¢
+set nocompatible
+
+" ------------------------------------------------------------
+" •¶šƒR[ƒhE‰üsƒR[ƒh
+" ------------------------------------------------------------
+
 scriptencoding utf-8
 
-" æ–‡å­—ã‚³ãƒ¼ãƒ‰ãƒ»æ”¹è¡Œã‚³ãƒ¼ãƒ‰è¨­å®š
-if has ('win32')
-  set termencoding=cp932
-endif
+" ƒtƒ@ƒCƒ‹‚ğŠJ‚­Û‚Ì•¶šƒR[ƒh”»’è‡
+set fileencodings=ucs-bom,utf-8,cp932,utf-16le,iso-2022-jp,euc-jp
 
-if has ('unix')
-  set fileencodings=ucs-bom,utf-8,cp932,utf-16le,euc-jp,iso-2022-jp
-  set fileformats=unix,dos,mac
+if has('unix')
+    set fileformats=unix,dos,mac
 else
-  set fileencodings=ucs-bom,utf-8,cp932,utf-16le,euc-jp,iso-2022-jp
-  set fileformats=dos,unix,mac
+    set fileformats=dos,unix,mac
 endif
 
-" viäº’æ›ã«ã—ãªã„
-if &compatible
-  set nocompatible
-endif
+" ------------------------------------------------------------
+" ƒtƒ@ƒCƒ‹Eƒoƒbƒtƒ@
+" ------------------------------------------------------------
 
-" ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆã—ãªã„
+" •Û‘¶‚Ì‚İŒ³ƒtƒ@ƒCƒ‹ƒoƒbƒNƒAƒbƒv‚ğì¬‚·‚é‹@”\‚ğ–³Œø‰»
 set nobackup
-" ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã®å‡ºåŠ›å…ˆ
-"set backupdir=.
 
-"ã‚¹ãƒ¯ãƒƒãƒ—ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆã™ã‚‹
+" ³íI—¹i•Û‘¶Š®—¹jŒã‚ÉƒoƒbƒNƒAƒbƒvƒtƒ@ƒCƒ‹‚ğíœ‚·‚é
+" •Û‘¶‚Ì‚İŒ³ƒtƒ@ƒCƒ‹ƒoƒbƒNƒAƒbƒv‚ğì¬‚µA•Û‘¶¬Œ÷ŒãƒoƒbƒNƒAƒbƒv‚ğíœ‚·‚é
+set writebackup
+
+" ƒXƒƒbƒvƒtƒ@ƒCƒ‹‚ğì¬‚·‚é
 set swapfile
 
-"60ç§’æ¯ã«ä¿å­˜
-set updatetime=60000
-
-" ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’é–‹ã„ã¦ã„ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã«ç§»å‹•ã•ã›ã‚‹
+" •ÒW’†‚Ìƒtƒ@ƒCƒ‹‚ÌƒfƒBƒŒƒNƒgƒŠ‚ğƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚É‚·‚é
 set autochdir
 
-" ç·¨é›†ä¸­ã®ãƒ•ã‚¡ã‚¤ãƒ«ãŒå¤‰æ›´ã•ã‚ŒãŸã‚‰è‡ªå‹•ã§èª­ã¿ç›´ã™
+" •ÒW’†‚Ìƒtƒ@ƒCƒ‹‚ª•ÏX‚³‚ê‚½‚ç©“®‚Å“Ç‚İ’¼‚·
 set autoread
-" ãƒãƒƒãƒ•ã‚¡ãŒç·¨é›†ä¸­ã§ã‚‚ãã®ä»–ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã‘ã‚‹ã‚ˆã†ã«
+
+" ƒoƒbƒtƒ@‚ª•ÒW’†‚Å‚à‚»‚Ì‘¼‚Ìƒtƒ@ƒCƒ‹‚ğŠJ‚¯‚é‚æ‚¤‚É‚·‚é
 set hidden
-" å…¥åŠ›ä¸­ã®ã‚³ãƒãƒ³ãƒ‰ã‚’ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã«è¡¨ç¤ºã™ã‚‹
-set showcmd
+
+" ‹N“®‚Ì‹óƒoƒbƒtƒ@‚Ìˆµ‚¢‚ğ•ÏX‚·‚éB
+autocmd BufLeave * if bufnr('%') == 1 && bufname('%') == '' | setlocal bufhidden=wipe | endif
 
 
-" è¦‹ãŸç›®ç³»
-" è¡Œç•ªå·ã‚’è¡¨ç¤º
+" ------------------------------------------------------------
+" •\¦
+" ------------------------------------------------------------
+
+" s”Ô†‚ğ•\¦
 set number
-" ã‚«ãƒ¼ã‚½ãƒ«ã®ä½ç½®æƒ…å ±ã‚’è¡¨ç¤º
-"set ruler
 
-" ç¾åœ¨ã®è¡Œã‚’å¼·èª¿è¡¨ç¤º
+" ƒJ[ƒ\ƒ‹s‚©‚ç‚Ì‘Š‘Î“I‚Ès”Ô†‚ğ•\¦‚·‚é
+set relativenumber
+
+" Œ»İ‚Ìs‚ğ‹­’²•\¦
 set cursorline
-" ç¾åœ¨ã®è¡Œã‚’å¼·èª¿è¡¨ç¤ºï¼ˆç¸¦ï¼‰
-"set cursorcolumn
-" è¡Œæœ«ã®1æ–‡å­—å…ˆã¾ã§ã‚«ãƒ¼ã‚½ãƒ«ã‚’ç§»å‹•ã§ãã‚‹ã‚ˆã†ã«
-set virtualedit=onemore
-" ãƒ“ãƒ¼ãƒ—éŸ³ã‚’å¯è¦–åŒ–
-set visualbell
-" ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒ©ã‚¤ãƒ³ã‚’å¸¸ã«è¡¨ç¤º
-set laststatus=2
-" ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã®è£œå®Œ
-set wildmode=list:longest
 
-" å…¨è§’å¹…ã§è¡¨ç¤ºã™ã‚‹
-if has("multi_byte")
+" Œ»İ‚Ì—ñ‚ğ‹­’²•\¦
+"set cursorcolumn
+
+" s––‚Ì1•¶šæ‚Ü‚ÅƒJ[ƒ\ƒ‹‚ğˆÚ“®‚Å‚«‚é‚æ‚¤‚É‚·‚é
+set virtualedit=onemore
+
+" ƒr[ƒv‰¹‚ğ‰Â‹‰»
+set visualbell
+
+" ƒXƒe[ƒ^ƒXƒ‰ƒCƒ“‚ğí‚É•\¦
+set laststatus=2
+
+" Ü‚è•Ô‚µ‚·‚é
+set wrap
+
+" ’PŒê’PˆÊ‚ÅÜ‚è•Ô‚·
+set linebreak
+
+" ‘SŠp•‚Å•\¦‚·‚é
+if has('multi_byte')
     set ambiwidth=double
 endif
 
-" æŠ˜ã‚Šè¿”ã—ã—ãªã„
-set nowrap
 
-" Tabç³»
-" ä¸å¯è¦–æ–‡å­—ã‚’å¯è¦–åŒ–(ã‚¿ãƒ–ãŒã€Œ?-ã€ã¨è¡¨ç¤ºã•ã‚Œã‚‹)
+" ”wŒiF
+set background=dark
+" colorscheme industry
+" colorscheme darkblue
+" colorscheme ron
+" colorscheme pablo
+" colorscheme desert
+
+if has('vcon')
+    " ƒ^[ƒ~ƒiƒ‹“à‚ÅAhighlight-guifg ‚Æ highlight-guibg ‚ğg‚¤
+    set termguicolors
+endif 
+
+
+" ------------------------------------------------------------
+" •s‰Â‹•¶š
+" ------------------------------------------------------------
+
+" •s‰Â‹•¶š‚ğ‰Â‹‰»
 set list
-set listchars=tab:>-,trail:-,eol:$
+set listchars=tab:>-,trail:-,eol:$,extends:>,precedes:<
 
-" ã‚«ãƒ¼ã‚½ãƒ«ç³»
+
+" ------------------------------------------------------------
+" ƒJ[ƒ\ƒ‹E•ÒW
+" ------------------------------------------------------------
+
+" ƒJ[ƒ\ƒ‹ˆÚ“®‚ğs‚ğ‚Ü‚½‚¢‚Å‰Â”\‚É‚·‚é
 set whichwrap=b,s,[,],<,>
 
-" ãƒãƒƒã‚¯ã‚¹ãƒšãƒ¼ã‚¹ã‚’ã€ç©ºç™½ã€è¡Œæœ«ã€è¡Œé ­ã§ã‚‚ä½¿ãˆã‚‹ã‚ˆã†ã«ã™ã‚‹
+" ƒoƒbƒNƒXƒy[ƒX‚ğ‹ó”’Es––Es“ª‚Å‚àg‚¦‚é‚æ‚¤‚É‚·‚é
 set backspace=indent,eol,start
 
-" æ¤œç´¢ç³»
-" æ¤œç´¢æ–‡å­—åˆ—ãŒå°æ–‡å­—ã®å ´åˆã¯å¤§æ–‡å­—å°æ–‡å­—ã‚’åŒºåˆ¥ãªãæ¤œç´¢ã™ã‚‹
-set ignorecase
-" æ¤œç´¢æ–‡å­—åˆ—ã«å¤§æ–‡å­—ãŒå«ã¾ã‚Œã¦ã„ã‚‹å ´åˆã¯åŒºåˆ¥ã—ã¦æ¤œç´¢ã™ã‚‹
-set smartcase
-" æ¤œç´¢æ–‡å­—åˆ—å…¥åŠ›æ™‚ã«é †æ¬¡å¯¾è±¡æ–‡å­—åˆ—ã«ãƒ’ãƒƒãƒˆã•ã›ã‚‹
-set incsearch
-" æ¤œç´¢æ™‚ã«æœ€å¾Œã¾ã§è¡Œã£ãŸã‚‰æœ€åˆã«æˆ»ã‚‹
-set wrapscan
-" æ¤œç´¢èªã‚’ãƒã‚¤ãƒ©ã‚¤ãƒˆè¡¨ç¤º
-set hlsearch
-" ESCé€£æ‰“ã§ãƒã‚¤ãƒ©ã‚¤ãƒˆè§£é™¤
-nmap <Esc><Esc> :nohlsearch<CR><Esc>
+" Š‡ŒÊ“ü—Í‚É‘Î‰‚·‚éŠ‡ŒÊ‚ğ•\¦
+set showmatch
 
-" ãƒšãƒ¼ã‚¹ãƒˆãƒ¢ãƒ¼ãƒ‰ã®åˆ‡ã‚Šæ›¿ãˆ$
-set pastetoggle=<F2>
+" ƒ}ƒbƒ`‚µ‚Ä‚¢‚éŠ‡ŒÊ‚ğ•\¦‚·‚é‚½‚ß‚ÌŠÔ‚ğ0.1•b’PˆÊ‚Åw’è‚·‚é
+set matchtime=5
 
-" ãƒ¤ãƒ³ã‚¯ï¼ãƒ—ãƒƒãƒˆæ™‚ã«ã‚¯ãƒªãƒƒãƒ—ãƒœãƒ¼ãƒ‰ã‚’ä½¿ç”¨ã™ã‚‹
+" ƒ„ƒ“ƒN^ƒvƒbƒg‚ÉƒNƒŠƒbƒvƒ{[ƒh‚ğg—p‚·‚é
 set clipboard+=unnamed
 
-" ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³è£œå®Œ
+" ƒy[ƒXƒgƒ‚[ƒh‚ÌØ‚è‘Ö‚¦
+set pastetoggle=<F2>
+
+if has("multi_byte_ime") || has("xim")
+    " ƒRƒƒ“ƒg:IME‚ÌƒVƒ‡[ƒgƒJƒbƒgFCTRL + ^
+
+    " Ÿ‘}“üƒ‚[ƒh‚É“ü‚é‚Æ‚«AIME ‚ğ OFF ‚É‚·‚é
+    set iminsert=0
+
+    " ŸŒŸõƒ‚[ƒh‚É“ü‚é‚Æ‚«AIME ‚ğ OFF ‚É‚·‚é(iminsert‚Ìİ’è‚ğQÆ‚·‚é)
+    set imsearch=-1
+endif
+
+
+" ------------------------------------------------------------
+" ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“
+" ------------------------------------------------------------
+
+" “ü—Í’†‚ÌƒRƒ}ƒ“ƒh‚ğƒXƒe[ƒ^ƒX‚É•\¦
+set showcmd
+
+" wildmenu ƒvƒ‰ƒOƒCƒ“‚ğg‚¤"
 set wildmenu
 
-set statusline=%F
+" ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“•âŠ®
+set wildmode=longest:list,longest:list,longest:list,longest:full
+
+" ‘å•¶šE¬•¶š‚ğ‹æ•Ê‚¹‚¸‚Éƒtƒ@ƒCƒ‹–¼‚ğŒŸõE•âŠ®‚·‚é
+set wildignorecase
+
+" ------------------------------------------------------------
+" ŒŸõ
+" ------------------------------------------------------------
+
+" ¬•¶š‚¾‚¯‚È‚ç‘å•¶š¬•¶š‚ğ‹æ•Ê‚µ‚È‚¢
+set ignorecase
+
+" ‘å•¶š‚ğŠÜ‚Şê‡‚Í‘å•¶š¬•¶š‚ğ‹æ•Ê‚·‚é
+set smartcase
+
+" ŒŸõ•¶š—ñ“ü—Í‚É‡Ÿ‘ÎÛ•¶š—ñ‚Éƒqƒbƒg‚³‚¹‚é
+set incsearch
+
+" ÅŒã‚Ü‚ÅŒŸõ‚µ‚½‚çÅ‰‚É–ß‚é
+set wrapscan
+
+" ŒŸõŒê‚ğƒnƒCƒ‰ƒCƒg•\¦
+set hlsearch
+
+" ESC˜A‘Å‚ÅƒnƒCƒ‰ƒCƒg‰ğœ
+nmap <Esc><Esc> :nohlsearch<CR>
+
+
+" ------------------------------------------------------------
+" ƒoƒbƒtƒ@ˆê——•\¦
+" ------------------------------------------------------------
+
+" ƒpƒ^[ƒ“2. SPACE + b ‚Åwildmenu‚ğ‹N“®‚·‚é
+" (ƒm[ƒ}ƒ‹ƒ‚[ƒh‚Å SPACEËb)
+nnoremap <Space>b :b <Tab>
+
+
+" ------------------------------------------------------------
+" ƒXƒe[ƒ^ƒXƒ‰ƒCƒ“
+" ------------------------------------------------------------
+
+" ƒoƒbƒtƒ@“à‚Ìƒtƒ@ƒCƒ‹‚ÌƒpƒX(“ü—Í‚³‚ê‚½’Ê‚èA‚Ü‚½‚ÍƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚É‘Î‚·‚é‘Š‘ÎƒpƒX)
+set statusline=%f
+
+" C³ƒtƒ‰ƒO
 set statusline+=%m
+
+" “Ç‚İ‚İê—pƒtƒ‰ƒO
 set statusline+=%r
+
+" ƒZƒNƒVƒ‡ƒ“‹æØ‚è
 set statusline+=%=
-set statusline+=[%l/%L]
-set statusline+=[%c]
-set statusline+=[%{(&fenc!=''?&fenc:$enc).':'.&ff}]
 
-set background=dark
+" ƒJ[ƒ\ƒ‹s”Ô†‚Æs”
+set statusline+=[%l\ /\ %L]
 
-" ãƒ•ã‚¡ã‚¤ãƒ«æ‹¡å¼µå­åˆ¥ ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆ
-filetype on
+" ƒJ[ƒ\ƒ‹‚Ì—ñ”
+set statusline+=[Col:%c]
+
+" •¶šƒR[ƒhA‰üsƒR[ƒhABOM‚Ì—L–³
+set statusline+=[%{(&fenc!=''?&fenc:&enc).':'.&ff.(&bomb?'\(BOM\)':'')}]
+
+
+" ============================================================
+" ƒCƒ“ƒfƒ“ƒg
+" ============================================================
+
+" ƒrƒWƒ…ƒAƒ‹ƒ‚[ƒh‚Å˜A‘±‚µ‚ÄƒCƒ“ƒfƒ“ƒgEƒCƒ“ƒfƒ“ƒg–ß‚µ‚ª‚Å‚«‚é‚æ‚¤‚É‚·‚é
+" ƒrƒWƒ…ƒAƒ‹ƒ‚[ƒh‚Å‘I‘ğŒãA'>'‚ ‚é‚¢‚Í'<' ‚ğ‰Ÿ‚·
+vnoremap < <gv
+vnoremap > >gv
+
+" ƒCƒ“ƒT[ƒgƒ‚[ƒh‚Ås‚¤i•¶š‚ğ“ü—Í’†j
+" CTRL + tF“ü—Í’†‚Ìs‚ğ1’iƒCƒ“ƒfƒ“ƒg‚·‚é
+" CTRL + dF“ü—Í’†‚Ìs‚ğ1’i–ß‚·
+
+" '='ƒRƒ}ƒ“ƒh‚ÅƒCƒ“ƒfƒ“ƒg‚ğ©“®®Œ`‚·‚é
+" —áFƒtƒ@ƒCƒ‹‘S‘Ì‚ÌƒCƒ“ƒfƒ“ƒg‚ğC³‚·‚é
+" ‚PDƒm[ƒ}ƒ‹ƒ‚[ƒh‚Å gg ‚ğ“ü—Í‚µ‚Ä Enter ‚ğ‰Ÿ‚·Biƒtƒ@ƒCƒ‹æ“ª‚ÉˆÚ“®‚·‚éj
+" ‚QD'=' ‚Æ 'G'(¦ƒtƒ@ƒCƒ‹I’[)‚ğ“ü—Í‚µ‚Ä Enter ‚ğ‰Ÿ‚·
+
+
+" ============================================================
+" ƒtƒ@ƒCƒ‹ƒ^ƒCƒv
+" ============================================================
+
 filetype plugin indent on
+syntax on
 
-" FiletypeãŒæ±ºã¾ã‚‰ãªã„å ´åˆã¯textã«ã™ã‚‹"
-function! s:NoneFileTypeSet()
-  if len(&filetype) == 0
-    set filetype=text
-  endif
-  if len(&fileencoding) == 0
-    if has ('unix')
-      set fileencoding=utf-8
-    else
-      set fileencoding=cp932
+
+" ------------------------------------------------------------
+" ƒtƒ@ƒCƒ‹ƒ^ƒCƒvEV‹Kƒtƒ@ƒCƒ‹‚ÌƒfƒtƒHƒ‹ƒgİ’è
+" ------------------------------------------------------------
+
+function! s:SetDefaultFileSettings() abort
+    " ƒtƒ@ƒCƒ‹ƒ^ƒCƒv‚ªŒˆ‚Ü‚ç‚È‚¢ê‡‚Ítext‚É‚·‚é
+    if len(&filetype) == 0
+        set filetype=text
     endif
-  endif
+
+    " V‹Kƒtƒ@ƒCƒ‹‚Ì•Û‘¶•¶šƒR[ƒh
+    if len(&fileencoding) == 0
+        if has('unix')
+            set fileencoding=utf-8
+            set fileformat=unix
+        else
+            set fileencoding=utf-8
+            set fileformat=dos
+
+            " •K—v‚Å‚ ‚ê‚ÎBOM•t‚«‚É‚·‚é
+            "set bomb
+        endif
+    endif
 endfunction
-autocmd BufEnter * call s:NoneFileTypeSet()
 
-"[text] -----------------------------------------
-augroup text
-  autocmd!
-  " å¼•ç”¨ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
-  autocmd FileType text vmap <S-k> :s/\v^(.*)$/> \1/<Enter>::nohlsearch<Enter>
+autocmd BufEnter * call s:SetDefaultFileSettings()
 
-  " å¼•ç”¨ã‚¢ãƒ³ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
-  autocmd FileType text vmap <S-l> :s/\v^> (.*)$/\1/g<Enter>::nohlsearch<Enter>
-  autocmd FileType text inoremap { {}<LEFT>
-  autocmd FileType text inoremap [ []<LEFT>
-  autocmd FileType text inoremap ( ()<LEFT>
-  autocmd FileType text inoremap " ""<LEFT>
-  autocmd FileType text inoremap ' ''<LEFT>
-  autocmd FileType text inoremap < <><LEFT>
 
-  " TABæ–‡å­—ã‚’è¦‹ãŸç›®ä¸Šä½•æ–‡å­—ã§è¡¨ç¤ºã™ã‚‹ã‹
-  autocmd FileType text setlocal tabstop=4
+" ------------------------------------------------------------
+" ƒRƒƒ“ƒg‰»EƒAƒ“ƒRƒƒ“ƒg‰»
+" ------------------------------------------------------------
 
-  " è‡ªå‹•ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆã§ã®ã‚¤ãƒ³ãƒ‡ãƒ³ãƒˆã®é•·ã•
-  autocmd FileType text setlocal shiftwidth=4
+function! ToggleComment(comment) range
+    let comment = escape(a:comment, '\')
+    let all_commented = 1
 
-  " TABã‚­ãƒ¼æŠ¼ä¸‹æ™‚ã«æŒ¿å…¥ã™ã‚‹ã‚¹ãƒšãƒ¼ã‚¹ã®æ•°
-  " (è¨­å®š'tabstop'ã«åˆã‚ã›ã‚‹)
-  autocmd FileType text setlocal softtabstop=0
-augroup END
+    for lnum in range(a:firstline, a:lastline)
+        if getline(lnum) !~# '^\s*' . comment . '\s'
+            let all_commented = 0
+            break
+        endif
+    endfor
 
-"[vim] -----------------------------------------
-augroup vimfile
-  autocmd!
-  autocmd FileType vim setlocal smartindent shiftwidth=2 tabstop=2 softtabstop=0
+    if all_commented
+        " ‘Ss‚ªƒRƒƒ“ƒg‚È‚çƒAƒ“ƒRƒƒ“ƒg
+        execute a:firstline . ',' . a:lastline
+                    \ . 's/^\(\s*\)' . comment . '\s\?/\1/'
+    else
+        " ‚»‚êˆÈŠO‚ÍƒRƒƒ“ƒg
+        execute a:firstline . ',' . a:lastline
+                    \ . 's/^\(\s*\)/\1' . a:comment . ' /'
+    endif
+endfunction
 
-  "ä¿å­˜æ™‚ã€è¡Œæœ«ã‚¹ãƒšãƒ¼ã‚¹ã‚’å‰Šé™¤ã™ã‚‹
-  autocmd BufWritePre *.vimrc,*.gvimrc :%s/\s\+$//ge
 
-  " ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
-  autocmd FileType vim vmap <S-k> :s/\v^(.*)$/" \1/<Enter>::nohlsearch<Enter>
 
-  " ã‚¢ãƒ³ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
-  autocmd FileType vim vmap <S-l> :s/\v^" (.*)$/\1/g<Enter>::nohlsearch<Enter>
-  autocmd FileType vim inoremap { {}<LEFT>
-  autocmd FileType vim inoremap [ []<LEFT>
-  autocmd FileType vim inoremap ( ()<LEFT>
-  autocmd FileType vim inoremap " ""<LEFT>
-  autocmd FileType vim inoremap ' ''<LEFT>
+" ============================================================
+" text
+" ============================================================
 
-  "TABæ–‡å­—ã‚’ã‚¹ãƒšãƒ¼ã‚¹ã«ã™ã‚‹
-  autocmd FileType vim setlocal expandtab
+augroup filetype_text
+    autocmd!
 
-  "æ§‹æ–‡ãƒã‚¤ãƒ©ã‚¤ãƒˆã‚’æœ‰åŠ¹ã«ã™ã‚‹
-  autocmd FileType vim syntax on
+    " ƒCƒ“ƒfƒ“ƒg
+    autocmd FileType text setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType text setlocal autoindent
 
-  " æ‹¬å¼§å…¥åŠ›æ™‚ã®å¯¾å¿œã™ã‚‹æ‹¬å¼§ã‚’è¡¨ç¤º
-  set showmatch
-  set matchtime=1
+    " ˆø—p•¶š‚ğ“ü‚ê‚é
+    autocmd FileType text vmap <C-k> :s/\v^(.*)$/> \1/<Enter>::nohlsearch<Enter>
+
+    " ˆø—p•¶š‚ğÁ‚·
+    autocmd FileType text vmap <C-s> :s/\v^> (.*)$/\1/g<Enter>::nohlsearch<Enter>
+
+    " Š‡ŒÊ“ü—Í‚É‘Î‰‚·‚éŠ‡ŒÊ‚ğ•\¦‚µ‚È‚¢
+    set noshowmatch
 
 augroup END
-"-----------------------------------------
-"[SQL] -----------------------------------------
-augroup sqlfile
-  autocmd!
-  autocmd FileType sql setlocal smartindent shiftwidth=4 tabstop=4 softtabstop=0
 
-  "ä¿å­˜æ™‚ã€è¡Œæœ«ã‚¹ãƒšãƒ¼ã‚¹ã‚’å‰Šé™¤ã™ã‚‹
-  autocmd BufWritePre *.sql :%s/\s\+$//ge
 
-  " ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
-  autocmd FileType sql vmap <S-k> :s/\v^(.*)$/-- \1/<Enter>::nohlsearch<Enter>
+" ============================================================
+" Vim
+" ============================================================
 
-  " ã‚¢ãƒ³ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
-  autocmd FileType sql vmap <S-l> :s/\v^-- (.*)$/\1/g<Enter>::nohlsearch<Enter>
-  autocmd FileType sql inoremap { {}<LEFT>
-  autocmd FileType sql inoremap [ []<LEFT>
-  autocmd FileType sql inoremap ( ()<LEFT>
-  autocmd FileType sql inoremap " ""<LEFT>
-  autocmd FileType sql inoremap ' ''<LEFT>
+augroup filetype_vim
+    autocmd!
 
-  "æ§‹æ–‡ãƒã‚¤ãƒ©ã‚¤ãƒˆã‚’æœ‰åŠ¹ã«ã™ã‚‹
-  autocmd FileType sql syntax on
+    " ƒCƒ“ƒfƒ“ƒg
+    autocmd FileType vim setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType vim setlocal smartindent autoindent
 
-  " æ‹¬å¼§å…¥åŠ›æ™‚ã®å¯¾å¿œã™ã‚‹æ‹¬å¼§ã‚’è¡¨ç¤º
-  set showmatch
-  set matchtime=1
+    " TAB•¶š‚ğƒXƒy[ƒX‚É‚·‚é
+    autocmd FileType vim setlocal expandtab
+
+    " •Û‘¶As––ƒXƒy[ƒX‚ğíœ
+    autocmd BufWritePre *.vimrc,*.gvimrc :%s/\s\+$//ge
+
+    " ƒRƒƒ“ƒg‰»EƒAƒ“ƒRƒƒ“ƒg‰»
+    autocmd FileType vim xnoremap <buffer> <silent> <C-K> :call ToggleComment('"')<CR>
+
 
 augroup END
-"-----------------------------------------
 
-"[C/C++] -----------------------------------------
-augroup cppfile
-  autocmd!
-  autocmd FileType c,cpp setlocal cindent shiftwidth=4 tabstop=4 softtabstop=0
 
-  "ä¿å­˜æ™‚ã€è¡Œæœ«ã‚¹ãƒšãƒ¼ã‚¹ã‚’å‰Šé™¤ã™ã‚‹
-  autocmd BufWritePre *.c,*.cpp,*.h :%s/\s\+$//ge
+" ============================================================
+" SQL
+" ============================================================
 
-  "[ãƒãƒ¼ãƒãƒ«ãƒ¢ãƒ¼ãƒ‰]
-  "ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«å…¨ä½“ã‚’æ•´å½¢ã™ã‚‹ with clang-format
-  autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
+augroup filetype_sql
+    autocmd!
 
-  "[ãƒ“ã‚¸ãƒ¥ã‚¢ãƒ«ãƒ¢ãƒ¼ãƒ‰]
-  "é¸æŠã—ãŸè¡Œã‚’æ•´å½¢ã™ã‚‹ with clang-format
-  autocmd FileType c,cpp noremap <C-f> :%!clang-format --style Microsoft<Enter>
+    " ƒCƒ“ƒfƒ“ƒg
+    autocmd FileType sql setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType sql setlocal smartindent autoindent
 
-  " ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
-  autocmd FileType c,cpp vmap <S-k> :s/\v^(.*)$/\/\/ \1/<Enter>::nohlsearch<Enter>
+    " •Û‘¶As––ƒXƒy[ƒX‚ğíœ
+    autocmd BufWritePre *.sql :%s/\s\+$//ge
 
-  " ã‚¢ãƒ³ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
-  autocmd FileType c,cpp vmap <S-l> :s/\v^\/\/ (.*)$/\1/g<Enter>::nohlsearch<Enter>
-  autocmd FileType c,cpp inoremap { {}<LEFT>
-  autocmd FileType c,cpp inoremap [ []<LEFT>
-  autocmd FileType c,cpp inoremap ( ()<LEFT>
-  autocmd FileType c,cpp inoremap " ""<LEFT>
-  autocmd FileType c,cpp inoremap ' ''<LEFT>
+    " ƒRƒƒ“ƒg‰»EƒAƒ“ƒRƒƒ“ƒg‰»
+    autocmd FileType sql xnoremap <buffer> <silent> <C-K> :call ToggleComment('--')<CR>
+augroup END
 
-  "æ§‹æ–‡ãƒã‚¤ãƒ©ã‚¤ãƒˆã‚’æœ‰åŠ¹ã«ã™ã‚‹
-  autocmd FileType c,cpp syntax on
-  " æ‹¬å¼§å…¥åŠ›æ™‚ã®å¯¾å¿œã™ã‚‹æ‹¬å¼§ã‚’è¡¨ç¤º
-  set showmatch
-  set matchtime=1
+
+" ============================================================
+" C / C++
+" ============================================================
+
+augroup filetype_cpp
+    autocmd!
+
+    " ƒCƒ“ƒfƒ“ƒg
+    autocmd FileType c,cpp setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType c,cpp setlocal cindent
+
+    " •Û‘¶As––ƒXƒy[ƒX‚ğíœ
+    autocmd BufWritePre *.c,*.cpp,*.h :%s/\s\+$//ge
+
+    " ƒRƒƒ“ƒg‰»EƒAƒ“ƒRƒƒ“ƒg‰»
+    autocmd FileType c,cpp xnoremap <buffer> <silent> <C-K> :call ToggleComment('//')<CR>
+
+    " ƒ\[ƒXƒtƒ@ƒCƒ‹‘S‘Ì‚ğ®Œ`‚·‚é
+    autocmd FileType c,cpp noremap <buffer> <F7> :%!clang-format --style Microsoft<CR>
+
+    " ‘I‘ğ‚µ‚½s‚ğ®Œ`‚·‚é
+    autocmd FileType c,cpp vnoremap <buffer> <F7> :!clang-format --style Microsoft<CR>
+
+    " termdebugƒvƒ‰ƒOƒCƒ“‚ğ“Ç‚İ‚Ş
+    autocmd FileType c,cpp packadd termdebug
+
+    " ƒ}ƒEƒX‚ğ—LŒø‚É‚·‚é
+    autocmd FileType c,cpp setlocal mouse=a
 
 augroup END
-"-----------------------------------------
 
-"[Python] -----------------------------------------
-augroup pythonfile
-  autocmd!
-  autocmd FileType python setlocal smartindent
-  autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class
-  autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=0
 
-  "TABæ–‡å­—ã‚’ã‚¹ãƒšãƒ¼ã‚¹ã«ã™ã‚‹
-  autocmd FileType python setlocal expandtab
+" ============================================================
+" Python
+" ============================================================
 
-  "ä¿å­˜æ™‚ã€è¡Œæœ«ã‚¹ãƒšãƒ¼ã‚¹ã‚’å‰Šé™¤ã™ã‚‹
-  autocmd BufWritePre *.py :%s/\s\+$//ge
+augroup filetype_python
+    autocmd!
 
-  "[ãƒãƒ¼ãƒãƒ«ãƒ¢ãƒ¼ãƒ‰]
-  "ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«å…¨ä½“ã‚’æ•´å½¢ã™ã‚‹ with black (pip install black)
-  autocmd FileType python noremap <C-f> :%!black -q -<Enter>
+    " ƒCƒ“ƒfƒ“ƒg
+    autocmd FileType python setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType python setlocal smartindent autoindent
 
-  "[ãƒ“ã‚¸ãƒ¥ã‚¢ãƒ«ãƒ¢ãƒ¼ãƒ‰]
-  "é¸æŠã—ãŸè¡Œã‚’æ•´å½¢ã™ã‚‹
-  autocmd FileType python vmap <S-f> :%!black -q -<Enter>
+    " TAB•¶š‚ğƒXƒy[ƒX‚É‚·‚é
+    autocmd FileType python setlocal expandtab
 
-  " ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
-  autocmd FileType python vmap <S-k> :s/\v^(.+)$/# \1/<Enter>::nohlsearch<Enter>
+    autocmd FileType python setlocal cinwords=if,elif,else,for,while,try,except,finally,def,class
 
-  " ã‚¢ãƒ³ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
-  autocmd FileType python vmap <S-l> :s/\v^\# (.+)$/\1/g<Enter>::nohlsearch<Enter>
-  autocmd FileType python inoremap { {}<LEFT>
-  autocmd FileType python inoremap [ []<LEFT>
-  autocmd FileType python inoremap ( ()<LEFT>
-  autocmd FileType python inoremap " ""<LEFT>
-  autocmd FileType python inoremap ' ''<LEFT>
+    " •Û‘¶As––ƒXƒy[ƒX‚ğíœ
+    autocmd BufWritePre *.py :%s/\s\+$//ge
 
-  "æ§‹æ–‡ãƒã‚¤ãƒ©ã‚¤ãƒˆã‚’æœ‰åŠ¹ã«ã™ã‚‹
-  autocmd FileType python syntax on
-  " æ‹¬å¼§å…¥åŠ›æ™‚ã®å¯¾å¿œã™ã‚‹æ‹¬å¼§ã‚’è¡¨ç¤º
-  set showmatch
-  set matchtime=1
+    " ƒRƒƒ“ƒg‰»EƒAƒ“ƒRƒƒ“ƒg‰»
+    autocmd FileType python xnoremap <buffer> <silent> <C-K> :call ToggleComment('#')<CR>
+
+    " ƒ\[ƒXƒtƒ@ƒCƒ‹‘S‘Ì‚ğ®Œ`‚·‚é with black
+    autocmd FileType python noremap <buffer> <F7> :%!black -q -<CR>
+
+    " ‘I‘ğ‚µ‚½”ÍˆÍ‚ğ®Œ`‚·‚é with black
+    autocmd FileType python vnoremap <buffer> <F7> :!black -q -<CR>
 
 augroup END
-"-----------------------------------------
 
-"[YAML] -----------------------------------------
-augroup yamlfile
-  autocmd!
-  autocmd FileType yaml setlocal smartindent
-  autocmd FileType yaml setlocal cinwords={,[,:
-  autocmd FileType yaml setlocal tabstop=2 shiftwidth=2 softtabstop=0
 
-  autocmd FileType yaml inoremap { {}<LEFT>
-  autocmd FileType yaml inoremap [ []<LEFT>
-  autocmd FileType yaml inoremap ( ()<LEFT>
-  autocmd FileType yaml inoremap " ""<LEFT>
-  autocmd FileType yaml inoremap ' ''<LEFT>
+" ============================================================
+" YAML
+" ============================================================
 
-  "TABæ–‡å­—ã‚’ã‚¹ãƒšãƒ¼ã‚¹ã«ã™ã‚‹
-  autocmd FileType yaml setlocal expandtab
+augroup filetype_yaml
+    autocmd!
 
-  "ä¿å­˜æ™‚ã€è¡Œæœ«ã‚¹ãƒšãƒ¼ã‚¹ã‚’å‰Šé™¤ã™ã‚‹
-  autocmd BufWritePre *.yaml :%s/\s\+$//ge
+    " ƒCƒ“ƒfƒ“ƒg
+    autocmd FileType yaml setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType yaml setlocal smartindent autoindent
 
-  " æ‹¬å¼§å…¥åŠ›æ™‚ã®å¯¾å¿œã™ã‚‹æ‹¬å¼§ã‚’è¡¨ç¤º
-  set showmatch
-  set matchtime=1
+    " TAB•¶š‚ğƒXƒy[ƒX‚É‚·‚é
+    autocmd FileType yaml setlocal expandtab
+    autocmd FileType yaml setlocal cinwords={,[,:
+
+    " •Û‘¶As––ƒXƒy[ƒX‚ğíœ
+    autocmd BufWritePre *.yaml :%s/\s\+$//ge
 
 augroup END
-"-----------------------------------------
 
-"[VBS/VB] -----------------------------------------
-augroup vbfile
-  autocmd!
-  autocmd FileType vb setlocal smartindent
-  autocmd FileType vb setlocal tabstop=2 shiftwidth=2 softtabstop=0
+" ============================================================
+" ƒoƒbƒ`ƒtƒ@ƒCƒ‹(BAT, CMD)
+" ============================================================
 
-  " ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
-  autocmd FileType vb vmap <S-k> :s/\v^(.+)$/' \1/<Enter>::nohlsearch<Enter>
+function! ToggleBatComment() range
+    let all_commented = 1
 
-  " ã‚¢ãƒ³ã‚³ãƒ¡ãƒ³ãƒˆåŒ–
-  autocmd FileType vb vmap <S-l> :s/\v^\' (.+)$/\1/g<Enter>::nohlsearch<Enter>
-  autocmd FileType vb inoremap { {}<LEFT>
-  autocmd FileType vb inoremap [ []<LEFT>
-  autocmd FileType vb inoremap ( ()<LEFT>
-  autocmd FileType vb inoremap " ""<LEFT>
-  autocmd FileType vb inoremap ' ''<LEFT>
+    for lnum in range(a:firstline, a:lastline)
+        if getline(lnum) !~? '^\s*REM\>'
+            let all_commented = 0
+            break
+        endif
+    endfor
 
-  "ä¿å­˜æ™‚ã€è¡Œæœ«ã‚¹ãƒšãƒ¼ã‚¹ã‚’å‰Šé™¤ã™ã‚‹
-  autocmd BufWritePre *.vbs,*.vb :%s/\s\+$//ge
+    if all_commented
+        execute a:firstline . ',' . a:lastline
+                    \ . 's/^\(\s*\)REM\>\s\?/\1/'
+    else
+        execute a:firstline . ',' . a:lastline
+                    \ . 's/^\(\s*\)/\1REM /'
+    endif
+endfunction
 
-  "æ§‹æ–‡ãƒã‚¤ãƒ©ã‚¤ãƒˆã‚’æœ‰åŠ¹ã«ã™ã‚‹
-  autocmd FileType vb syntax on
+augroup filetype_bat
+    autocmd!
 
-  " æ‹¬å¼§å…¥åŠ›æ™‚ã®å¯¾å¿œã™ã‚‹æ‹¬å¼§ã‚’è¡¨ç¤º
-  set showmatch
-  set matchtime=1
+    " ƒCƒ“ƒfƒ“ƒg
+    autocmd FileType dosbatch,bat setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType dosbatch,bat setlocal smartindent autoindent
 
+    " TAB•¶š‚ğƒXƒy[ƒX‚É‚·‚é
+    autocmd FileType dosbatch,bat setlocal expandtab
+
+    " ƒRƒƒ“ƒg‰»EƒAƒ“ƒRƒƒ“ƒg‰»
+    autocmd FileType dosbatch,bat xnoremap <buffer> <silent> <C-K> :call ToggleBatComment()<CR>
+
+    " •Û‘¶As––ƒXƒy[ƒX‚ğíœ
+    autocmd BufWritePre *.bat,*.cmd :%s/\s\+$//ge
+
+    " •¶šƒR[ƒh‚ğ‹­§‚·‚é
+    autocmd FileType dosbatch,bat setlocal fileencoding=cp932 fileformat=dos
 augroup END
-"-----------------------------------------
+
+" ============================================================
+" Windows INIƒtƒ@ƒCƒ‹(INI)
+" ============================================================
+
+augroup filetype_ini
+    autocmd!
+
+    " ƒCƒ“ƒfƒ“ƒg
+    autocmd FileType dosini setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType dosini setlocal smartindent autoindent
+
+    " ƒRƒƒ“ƒg‰»EƒAƒ“ƒRƒƒ“ƒg‰»
+    autocmd FileType dosini xnoremap <buffer> <silent> <C-K> :call ToggleComment(';')<CR>
+
+    " •Û‘¶As––ƒXƒy[ƒX‚ğíœ
+    autocmd BufWritePre *.ini :%s/\s\+$//ge
+
+    " •¶šƒR[ƒh‚ğ‹­§‚·‚é
+    autocmd FileType dosini setlocal fileencoding=cp932 fileformat=dos
+augroup END
+
+
+" ============================================================
+" VB / VBS
+" ============================================================
+
+augroup filetype_vb
+    autocmd!
+
+    " ƒCƒ“ƒfƒ“ƒg
+    autocmd FileType vb setlocal tabstop=4 shiftwidth=4 softtabstop=0
+    autocmd FileType vb setlocal smartindent autoindent
+
+    " ƒRƒƒ“ƒg‰»EƒAƒ“ƒRƒƒ“ƒg‰»
+    autocmd FileType vb xnoremap <buffer> <silent> <C-K> :call ToggleComment("'")<CR>
+
+    " •Û‘¶As––ƒXƒy[ƒX‚ğíœ
+    autocmd BufWritePre *.vbs,*.vb :%s/\s\+$//ge
+
+    " •¶šƒR[ƒh‚ğ‹­§‚·‚é
+    autocmd FileType vb setlocal fileencoding=cp932 fileformat=dos
+augroup END

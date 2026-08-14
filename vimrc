@@ -305,10 +305,10 @@ function! g:GetRawByteHex()
     endif
 
     " 2. カーソル位置の１バイトを取得する
-    " strpart() で1バイトを切り出し、char2nr() で 0〜255 の数値に変える
+    " strpart() で1バイトを切り出し、char2nr() で 0～255 の数値に変える
     let l:current_byte = char2nr(strpart(l:line_str, l:idx, 1))
 
-    " 3. 各文字コードに応じた「何バイト構成か（1〜4）」を判定する
+    " 3. 各文字コードに応じた「何バイト構成か（1～4）」を判定する
     let l:char_len = 1
 
     if l:fenc =~? 'cp932' || l:fenc =~? 'sjis'
