@@ -2,16 +2,13 @@
 set columns=120
 set lines=25
 
-if has("gui_win32")
-    set guifont=ＭＳ_ゴシック:h12::cSHIFTJIS:qDRAFT
-elseif has("gui_running")
-    set guifont="Noto Mono 10"
-endif
+if has("gui_running")
+    if has("win32") || has("win64")
+        set guifont=ＭＳ\ ゴシック:h12::cSHIFTJIS:qDRAFT
+    " set guifont=NOTONOTO_HS:h12::cSHIFTJIS:qDRAFT
 
-"IME状態に応じたカーソル色を設定
-if has("multi_byte_ime") || has("xim")
-    highlight Cursor guifg=#000d18 guibg=#8faf9f gui=bold
-    highlight CursorIM guifg=NONE guibg=#ecbcbc
+    elseif has("unix")
+        set guifont=Monospace\ 12
+        set linespace=2
+    endif
 endif
-
-set mousemodel=popup

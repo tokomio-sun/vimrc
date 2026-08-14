@@ -98,13 +98,14 @@ if has('vcon')
     set termguicolors
 endif 
 
+
 " ------------------------------------------------------------
 " 不可視文字
 " ------------------------------------------------------------
 
 " 不可視文字を可視化
 set list
-set listchars=tab:»-,trail:-,eol:↲,extends:»,precedes:«,nbsp:%
+set listchars=tab:»-,trail:-,eol:\\uffe9,extends:»,precedes:«
 
 
 " ------------------------------------------------------------
@@ -128,6 +129,16 @@ set clipboard+=unnamed
 
 " ペーストモードの切り替え
 set pastetoggle=<F2>
+
+if has("multi_byte_ime") || has("xim")
+    " コメント:IMEのショートカット：CTRL + ^
+
+    " 次挿入モードに入るとき、IME を OFF にする
+    set iminsert=0
+
+    " 次検索モードに入るとき、IME を OFF にする(iminsertの設定を参照する)
+    set imsearch=-1
+endif
 
 
 " ------------------------------------------------------------
@@ -353,6 +364,25 @@ function! g:GetRawByteHex()
     return '[RawHex: ' . l:result_str . ']'
 endfunction
 
+" IME状態表示
+if has("multi_byte_ime") || has("xim")
+
+    " IME の状態を取得してステータスライン用変数を更新する関数
+    function! MyImStatusFunc()
+        " &iminsert の値に基づいて描画を更新
+        redrawstatus
+        return &iminsert
+    endfunction
+
+    " VimのIME状態取得処理に自作関数をフックする
+    set imstatusfunc=MyImStatusFunc
+
+    function! MyImStatus()
+        return (&iminsert == 1 || &iminsert == 2) ? '[IME:ON]' : ''
+    endfunction
+endif
+
+
 " バッファ内のファイルのパス(入力された通り、またはカレントディレクトリに対する相対パス)
 set statusline=%f
 
@@ -365,16 +395,21 @@ set statusline+=%r
 " セクション区切り
 set statusline+=%=
 
+" IME状態表示
+if has("multi_byte_ime") || has("xim")
+    set statusline+=%{MyImStatus()}
+endif
+
 " RawHex 表示
 set statusline+=%{GetRawByteHex()}
 
 " カーソル行番号と行数
-set statusline+=[%l/%L\ %p%%]
+set statusline+=[%l\ /\ %L]
 
 " カーソルの列数
-set statusline+=[%c]
+set statusline+=[Col:%c]
 
-" BOMの有無
+" 文字コード、改行コード、BOMの有無
 set statusline+=[%{(&fenc!=''?&fenc:&enc).':'.&ff.(&bomb?'\(BOM\)':'')}]
 
 
