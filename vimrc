@@ -100,6 +100,17 @@ endif
 
 
 " ------------------------------------------------------------
+" ウィンドウタイトル編集
+" ------------------------------------------------------------
+set title
+
+if has("gui_running")
+    set titlestring=GVIM\ [BufNo:%n]}\ [Byte:%-4o]\ %F
+else
+    set titlestring=VIM\ [BufNo:%n]}\ [Byte:%-4o]\ %F
+endif
+
+" ------------------------------------------------------------
 " 不可視文字
 " ------------------------------------------------------------
 
@@ -367,6 +378,7 @@ endfunction
 " IME状態表示
 if has("multi_byte_ime") || has("xim")
 
+
     if has("win32") || has("win64")
         " IME の状態を取得してステータスライン用変数を更新する関数
         function! MyImStatusFunc()
@@ -404,7 +416,7 @@ if has("multi_byte_ime") || has("xim")
 endif
 
 " バッファ内のファイルのパス(入力された通り、またはカレントディレクトリに対する相対パス)
-set statusline=%f
+set statusline=%<%F
 
 " 修正フラグ
 set statusline+=%m
